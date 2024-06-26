@@ -183,7 +183,7 @@
         <div class="audio-title">Озвучка страницы</div>
         <div class="time-display" id="time-display">00:00 / 00:00</div>
         <div class="audio-player">
-            <audio id="audio-player" src="https://danzogit.gitlab.io/7dtd_1.0_audio.mp3"></audio>
+            <audio id="audio-player" src="https://gitlab.com/DanzoGit/danzogit.gitlab.io/-/raw/master/public/7dtd_1.0_audio.mp3?inline=false"></audio>
             <div class="controls">
                 <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
                 <div class="seek-bar-container">
@@ -192,7 +192,7 @@
             </div>
             <div class="volume-container">
                 <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
-                <input type="range" id="volume-bar" value="70" max="100" class="volume-bar">
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
             </div>
         </div>
     </div>
@@ -1304,9 +1304,9 @@
         const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
 
         let isMuted = false;
-        let previousVolume = 0.70; // Начальная громкость 70%
+        let previousVolume = 0.50; // Начальная громкость 50%
 
-        // Устанавливаем начальную громкость на 70%
+        // Устанавливаем начальную громкость на 50%
         audio.volume = previousVolume;
         volumeBar.value = previousVolume * 100;
 
