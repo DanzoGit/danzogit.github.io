@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Days to Die 1.0 b309 Примечания к выпуску</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="https://danzogit.github.io/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #333333;
+        }
+        body.dark-theme {
+            background-color: #333333;
+            color: #dddddd;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.75em;
+            margin-top: 1em;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 0.75em;
+        }
+        p, li {
+            margin-top: 0.5em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .important-dates {
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+            margin: 1em 0;
+        }
+		.important-dates h3 {
+            margin-top: 0;
+        }
+        body.light-theme .important-dates {
+            background-color: #e9f5ff;
+        }
+        body.dark-theme .important-dates {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+			z-index: 1001; /* Добавим z-index для корректного наложения */
+        }
+        .theme-toggle.dark {
+            background-color: #ffffff;
+            color: #0056b3;
+        }
+		.video-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+        .audio-player-container {
+            position: fixed; /* Фиксированное позиционирование */
+            top: 60px; /* Позиция под кнопкой смены темы */
+            right: 10px;
+            z-index: 1000;
+            background-color: transparent; /* Убираем фон */
+            padding: 20px;
+            border-radius: 5px;
+            /* color: white; Белый текст */
+            /* width: 100%; Увеличиваем ширину */
+            max-width: 500px; /* Максимальная ширина */
+            box-sizing: border-box; /* Включаем padding и border в ширину */
+            text-align: center; /* Выравнивание текста */
+            display: none;
+        }
+        .audio-player-container .audio-title {
+            margin-bottom: 5px; /* Отступ снизу для заголовка */
+            color: inherit; /* Цвет заголовка согласно теме */
+        }
+        .audio-player-container .time-display {
+            margin-bottom: 10px;
+            color: inherit; /* Цвет длительности согласно теме */
+        }
+        .audio-player-container .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause:hover {
+            color: #cccccc;
+        }
+        .audio-player-container .seek-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        .audio-player-container input[type="range"].seek-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        .audio-player-container .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .audio-player-container .volume-icon {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .volume-icon:hover {
+            color: #cccccc;
+        }
+        .audio-player-container input[type="range"].volume-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        /* Адаптивные стили для малых экранов */
+        @media (max-width: 480px) {
+            .audio-player-container {
+                width: calc(100% - 20px); /* Учёт отступов */
+                left: 50%; /* Центрирование */
+                right: auto; /* Сброс правого отступа */
+                transform: translateX(-50%); /* Выравнивание по центру */
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <button class="theme-toggle dark">Переключить на светлую тему</button>
+
+    <div class="audio-player-container">
+        <div class="audio-title">Озвучка страницы</div>
+        <div class="time-display" id="time-display">00:00 / 00:00</div>
+        <div class="audio-player">
+            <audio id="audio-player" src=""></audio>
+            <div class="controls">
+                <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
+                <div class="seek-bar-container">
+                    <input type="range" id="seek-bar" class="seek-bar" value="0" max="100">
+                </div>
+            </div>
+            <div class="volume-container">
+                <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Вот что изменилось с b309:</h1>
+        
+        <h2>Добавлено:</h2>
+        <ul>
+            <li>Звуковые эффекты зомби в защитных костюмах</li>
+            <li>Аудиоинтерфейс инвентаря для специальных эликсиров дедушки</li>
+            <li>Аудиоинтерфейс инвентаря для кастетов</li>
+            <li>Аудиоинтерфейс инвентаря для бинтов</li>
+            <li>Аудиоинтерфейс инвентаря для медицинских предметов</li>
+            <li>Набор небольших частей рельефа для точек интереса (POI)</li>
+            <li>rwg_tile_gateway_straight3a / rwg_tile_gateway_straight3b</li>
+            <li>Зомби-разведчики теперь могут появляться в количестве одного или двух и будут яростными или радиационными на более высоких стадиях игры</li>
+            <li>Возможность ручного переноса строк с помощью "\n" в ServerDescription</li>
+            <li>Добавлена часть тротуара для store_hardware_01 в Невезгане</li>
+            <li>Песня The Fun Pimps при показе титров</li>
+            <li>Все языки для новых записей и обновлений</li>
+            <li>Новые цвета волос и исправления</li>
+            <li>Информация о разрешённых символах в комментарии serverconfig.xml для GameName</li>
+            <li>Аудиоинтерфейс инвентаря для напитков</li>
+        </ul>
+        
+        <h2>Изменено:</h2>
+        <ul>
+            <li>Обновлено описание Magnum Enforcer Vol 2 для упоминания наряда Enforcer</li>
+            <li>Обновлены звуки скольжения и отскока велосипеда</li>
+            <li>Изменено значение ShowQuestClearCount на 3 для base_military_01</li>
+            <li>Увеличено здоровье кулеров игрока</li>
+            <li>Обновлены флаги, метки, сбор, XP и максимальное здоровье Ужасных волков</li>
+            <li>Увеличены настройки урона, инфекции и ссадин для meleeHandAnimalDireWolf</li>
+            <li>Обновлены несколько групп сущностей для включения Ужасных волков</li>
+            <li>Hordestone теперь добавляет больше зомби на каждого члена команды</li>
+            <li>Ужасный волк ведет себя как зомби</li>
+            <li>Решены вопросы QA</li>
+            <li>Все сундуки в лут-комнатах теперь используют новую группу ArmorPartsChests без ткани/кожи и шансом на 1 до 3 других частей для крафта брони</li>
+            <li>Удалено требование держать предмет для испытаний на сбор</li>
+            <li>Отмечены больше сборных реквизитов для некоторых испытаний на сбор</li>
+            <li>Уменьшено расстояние отслеживания для некоторых испытаний на сбор</li>
+            <li>Обновлены метки для усиления добычи замков с перком Взлом отмычкой</li>
+            <li>Усиление добычи журнала Forge Ahead с перком Взлом отмычкой теперь ограничено 15 уровнем крафта рабочей станции</li>
+            <li>Обновлены отображения радиуса взрыва для гранат и других метательных предметов</li>
+            <li>Краткие описания испытаний на сбор обновлены в соответствии с новыми параметрами</li>
+            <li>Описание испытания на сбор гнилого мяса обновлено в соответствии с новыми параметрами</li>
+            <li>Обновлены описания для событий игры Hordestone на Twitch</li>
+            <li>Обновлена статистика опыта за сбор на шляпе scavenger, чтобы предотвратить путаницу с типом XP</li>
+            <li>Обновлена локализация для описания коллектора росы</li>
+            <li>Баланс текстур ящика для хранения железа при низком освещении</li>
+            <li>Баланс текстур в игре</li>
+            <li>Обновлен archetypes.xml с новыми цветами волос</li>
+            <li>Перк Взлом отмычкой уровень 1 больше не имеет бонуса к добыче замков</li>
+            <li>Перк Взлом отмычкой уровень 2 теперь дает 1 дополнительный отмычку при нахождении в луте</li>
+            <li>Перк Взлом отмычкой уровень 3 теперь дает 2 дополнительные отмычки при нахождении в луте</li>
+            <li>Обновлена локализация для modArmorTreasureHunterDesc для отражения значений в xml</li>
+            <li>Моды на бронепластины и моды на бронепластины с лентами больше нельзя установить в тяжелую броню, чтобы предотвратить неуязвимость к урону из-за проблем со сложением</li>
+            <li>Очень небольшое снижение максимальной физической и элементальной стойкости у тяжелой брони, чтобы предотвратить неуязвимость к урону из-за проблем со сложением</li>
+            <li>Снижено сопротивление к урону от нежити у костюма Священник Q6 с 20% до 15%, чтобы предотвратить неуязвимость к урону из-за проблем со сложением</li>
+            <li>Обновлена локализация для модов на пластины, чтобы отразить изменения в установке</li>
+            <li>Обновлены длинные описания перка Бум-палка с недостающей информацией о бонусах к добыче</li>
+            <li>Отрегулирована масса ресурса ткани, чтобы обеспечить правильное разбиение предметов, таких как бинты и клейкая лента</li>
+            <li>Шины теперь разбираются на ткань, а не на дерево</li>
+            <li>Перемещен store_hardware_01 в деревню, с необходимыми частями проезда</li>
+            <li>rwg_tile_gateway_straight3 удалены части разрушенного моста, чтобы работать с straight3a и straight3b до решения проблемы с impostor</li>
+        </ul>
+
+        <h2>Исправлено:</h2>
+        <ul>
+            <li>Окно инвентаря доступно для выпавших мешков с добычей, которые исчезли</li>
+            <li>Ошибка валидации Steam Group может заблокировать процесс входа</li>
+            <li>Пятно на дороге в Невезгане</li>
+            <li>Зависание при присоединении к многопользовательской игре при запуске и последующем отказе от EULA</li>
+            <li>Изменение настроек дисплея сбивает размеры интерфейса</li>
+            <li>Добавлены обходные пути и исправления для нескольких проблем с сбросом POI</li>
+            <li>Велосипед мог воспроизводить звук скольжения при движении вперед, когда не скользил</li>
+            <li>Транспортные средства часто не воспроизводили звук скольжения при торможении</li>
+            <li>Сбой игры, связанный с EOS_Achievements_UnlockedAchievement_Release</li>
+            <li>Спам Rolling NRE при обновлении блока, когда зомби его разрушает</li>
+            <li>Сундук infestation в base_military_01 и отсутствующая текстура</li>
+            <li>Решены вопросы QA для downtown_filler_07</li>
+            <li>Исправлена возможность получения незавершенного задания на base_military_01 при обходе переключателей</li>
+            <li>Неверная подсказка для испытания на установку двери</li>
+            <li>Неверная подсказка для испытания на установку земельного претензийного знака</li>
+            <li>Текстуры эффектов не обновляются после изменения настроек качества</li>
+            <li>Hordestones не возрождаются правильно</li>
+            <li>Исправлено: Minifills теперь должны использовать цилиндры и сферы</li>
+            <li>Нажатие W для снятия элемента брони не обновляет персонажа</li>
+            <li>Урон от клиентов не вызывает возрождение hordestone</li>
+            <li>Установка транспортного средства, дрона и турели могла дублировать их</li>
+            <li>Исключение Light Array в генерации куска</li>
+            <li>Equipment Stack вызывает изменение слота дважды при обработке перемещения в предпочтительное место</li>
+            <li>Защита торговца была удалена для клиентов без данных</li>
+            <li>#rename_signs больше не работали с новыми контейнерами игроков</li>
+            <li>Баффы блоков Twitch GameEvent теперь правильно засчитывают убийства</li>
+            <li>Электрические предметы с инвентарем теряют весь инвентарь при разборке</li>
+            <li>BlockVendingMachine и BlockSleeper не очищали должным образом свои TileEntity соответствия</li>
+            <li>Эксплойт с потребляемыми предметами с использованием заряженного лука</li>
+            <li>Чека гранаты появляется снова после того, как граната была брошена</li>
+            <li>Несоответствие локализации подсказки о постоянстве кусочка</li>
+            <li>Исправлено смешивание рельефа с ровной поверхностью в rwg_tile_rural_corner_02</li>
+            <li>Исправлена проблема плотности рельефа на rwg_tile_rural_corner_02</li>
+            <li>Исправлено некрутящееся веревка в abandoned_house_07</li>
+            <li>Пропущенный триггерный объем в store_gun_01</li>
+            <li>Форматирование задания на установку костра</li>
+            <li>Снятие кузницы оставляет после себя ресурсы</li>
+            <li>Условная оценка в XUi XML</li>
+            <li>Описания серверов выходили за пределы BB-кодов</li>
+            <li>Зависание подсказки в инструментальной панели</li>
+            <li>Невозможность фильтрации только для XP в списке серверов</li>
+        </ul>
+    </div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = 'Переключить на светлую тему';
+                themeToggle.classList.add('dark');
+            } else {
+                themeToggle.textContent = 'Переключить на темную тему';
+                themeToggle.classList.remove('dark');
+            }
+        });
+        
+        // Audio player controls
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeIconBtn = document.getElementById('volume-icon');
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+        const volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+        const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+
+        let isMuted = false;
+        let previousVolume = 0.50; // Начальная громкость 50%
+
+        // Устанавливаем начальную громкость на 50%
+        audio.volume = previousVolume;
+        volumeBar.value = previousVolume * 100;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        // Смена иконки на play при завершении аудио
+        audio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = playIcon;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (100 / audio.duration) * audio.currentTime;
+            seekBar.value = value;
+
+            const currentMinutes = Math.floor(audio.currentTime / 60);
+            const currentSeconds = Math.floor(audio.currentTime - currentMinutes * 60);
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+
+            const formatTime = (minutes, seconds) => {
+                return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+            if (audio.volume === 0) {
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            } else {
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            }
+        });
+
+        volumeIconBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = previousVolume;
+                volumeBar.value = previousVolume * 100;
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            } else {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeBar.value = 0;
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            }
+            isMuted = !isMuted;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        function formatTime(minutes, seconds) {
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Показать длительность при загрузке страницы
+        window.addEventListener('load', () => {
+            if (audio.readyState >= 1) {
+                const durationMinutes = Math.floor(audio.duration / 60);
+                const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+                timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+            }
+        });
+    </script>
+</body>
+</html>
