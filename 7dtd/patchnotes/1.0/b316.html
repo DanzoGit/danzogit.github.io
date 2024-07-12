@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Days to Die 1.0 b316 Примечания к выпуску</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="https://danzogit.github.io/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #333333;
+        }
+        body.dark-theme {
+            background-color: #333333;
+            color: #dddddd;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.75em;
+            margin-top: 1em;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 0.75em;
+        }
+        p, li {
+            margin-top: 0.5em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .important-dates {
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+            margin: 1em 0;
+        }
+		.important-dates h3 {
+            margin-top: 0;
+        }
+        body.light-theme .important-dates {
+            background-color: #e9f5ff;
+        }
+        body.dark-theme .important-dates {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+			z-index: 1001; /* Добавим z-index для корректного наложения */
+        }
+        .theme-toggle.dark {
+            background-color: #ffffff;
+            color: #0056b3;
+        }
+		.video-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+        .audio-player-container {
+            position: fixed; /* Фиксированное позиционирование */
+            top: 60px; /* Позиция под кнопкой смены темы */
+            right: 10px;
+            z-index: 1000;
+            background-color: transparent; /* Убираем фон */
+            padding: 20px;
+            border-radius: 5px;
+            /* color: white; Белый текст */
+            /* width: 100%; Увеличиваем ширину */
+            max-width: 500px; /* Максимальная ширина */
+            box-sizing: border-box; /* Включаем padding и border в ширину */
+            text-align: center; /* Выравнивание текста */
+            display: none;
+        }
+        .audio-player-container .audio-title {
+            margin-bottom: 5px; /* Отступ снизу для заголовка */
+            color: inherit; /* Цвет заголовка согласно теме */
+        }
+        .audio-player-container .time-display {
+            margin-bottom: 10px;
+            color: inherit; /* Цвет длительности согласно теме */
+        }
+        .audio-player-container .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause:hover {
+            color: #cccccc;
+        }
+        .audio-player-container .seek-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        .audio-player-container input[type="range"].seek-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        .audio-player-container .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .audio-player-container .volume-icon {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .volume-icon:hover {
+            color: #cccccc;
+        }
+        .audio-player-container input[type="range"].volume-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        /* Адаптивные стили для малых экранов */
+        @media (max-width: 480px) {
+            .audio-player-container {
+                width: calc(100% - 20px); /* Учёт отступов */
+                left: 50%; /* Центрирование */
+                right: auto; /* Сброс правого отступа */
+                transform: translateX(-50%); /* Выравнивание по центру */
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <button class="theme-toggle dark">Переключить на светлую тему</button>
+
+    <div class="audio-player-container">
+        <div class="audio-title">Озвучка страницы</div>
+        <div class="time-display" id="time-display">00:00 / 00:00</div>
+        <div class="audio-player">
+            <audio id="audio-player" src=""></audio>
+            <div class="controls">
+                <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
+                <div class="seek-bar-container">
+                    <input type="range" id="seek-bar" class="seek-bar" value="0" max="100">
+                </div>
+            </div>
+            <div class="volume-container">
+                <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
+            </div>
+        </div>
+    </div>
+
+	<div class="container">
+        <h1>Здравствуйте, Выжившие!</h1>
+        <p>Сегодня у нас для вас версия V1.0 b316 EXP. Ознакомьтесь с журналом изменений в конце.</p>
+        <p>Выжившие!</p>
+        <p>Мы прекращаем использование существующих предустановок EXP с следующим обновлением EXP. Будут предоставлены новые предустановки с другими названиями, чтобы избежать случайных проблем с сохранением игры. Чтобы сохранить ваш текущий прогресс, скопируйте вашу текущую предустановку и вставьте ее в папку сгенерированных миров:</p>
+        <p><code>%APPDATA%\7DaysToDie\GeneratedWorlds</code></p>
+        <p>Найдите ваш существующий мир здесь:</p>
+        <p><code>&lt;Ваша_Папка_С_Играми_Steam&gt;:\SteamLibrary\steamapps\common\7 Days To Die</code></p>
+        <p>Или найдите его следующим образом:</p>
+        <ol>
+            <li>Щелкните правой кнопкой мыши на игре в Steam</li>
+            <li>Выберите "Свойства"</li>
+            <li>Перейдите на вкладку "Установленные файлы"</li>
+            <li>Нажмите "Просмотреть..."</li>
+            <li>Откройте папку "Data"</li>
+            <li>Откройте папку "World"</li>
+        </ol>
+        <p>Мы значительно улучшили RWG с момента создания оригинальных предустановок для EXP. Мы хотим, чтобы вы насладились этими улучшениями, но также уважаем ваши текущие сохранения и хотим, чтобы вы продолжали играть, если желаете.</p>
+        <p>Вы также можете скачать предустановки EXP здесь: <a href="https://drive.google.com/drive/folders/1_bK7juJf-L4Wq0vN5HIuUtOFPD0HWebn" target="_blank">ссылка на Google Drive</a></p>
+        <p>Спасибо за ваше понимание и сотрудничество!</p>
+        <p>Оставайтесь на связи,<br>The Fun Pimps</p>
+
+        <h2>Журнал изменений b316:</h2>
+
+        <h3>Добавлено</h3>
+        <ul>
+            <li>rwg_tile_countryresidential_straight_03.</li>
+            <li>part_countryresidential_back_lot5 до lot8.</li>
+            <li>Звуковые эффекты для зомби-мутантов.</li>
+            <li>Ограничение количества образцов лучей для теней в зависимости от качества теней.</li>
+            <li>Звуки интерфейса инвентаря для метательных предметов.</li>
+            <li>Звуки интерфейса инвентаря для инструмента стриппер.</li>
+            <li>Звуки интерфейса инвентаря для клейкой ленты.</li>
+            <li>Звуки интерфейса инвентаря для продуктов питания.</li>
+            <li>Включение графических заданий Unity из лаунчера игры.</li>
+            <li>Новый медведь и зомби-медведь.</li>
+        </ul>
+
+        <h3>Изменено</h3>
+        <ul>
+            <li>Увеличено значение резкости для графических пресетов Высокий/Ультра до 50% и 60% для FSR с Temporal AA, чтобы обеспечить схожую резкость.</li>
+            <li>Удалена настройка графики глубины резкости, которая не использовалась.</li>
+            <li>Сообщения, не исходящие от игроков, теперь не будут использовать BB-коды (моды, сообщения сервера и т.д.).</li>
+            <li>Загрузка файла EntityClasses.xml при загрузке мира, а не при запуске программы.</li>
+            <li>Увеличено HP для медведей и зомби-медведей.</li>
+            <li>Зомби-собаки, дикие волки, кабан-мутант (Грейс) и медведи теперь сбрасывают мешки с добычей.</li>
+            <li>Кабан-мутант (Грейс) теперь дает гниющую плоть при сборе.</li>
+            <li>Настроена добыча в сброшенных мешках с добычей.</li>
+            <li>Улучшены настройки отражений для графики на ультра пресете.</li>
+            <li>Разрешено возрождение на/рядом с рюкзаком/спальным мешком, даже если он был удален после появления окна возрождения.</li>
+            <li>Обновлены события сбора/разрушения для нескольких реквизитов, чтобы разрешить разборку только инструментом для сбора.</li>
+            <li>Удалены ящики с алкоголем с кузова грузовика в survivor_camp_01, чтобы предотвратить появление грузовика боком.</li>
+            <li>Обновлен Медвежонок для использования собственного предмета с меньшим радиусом действия.</li>
+            <li>Удален ненужный и неправильно написанный тег из armorCommandoOutfit.</li>
+            <li>Обновлена локализация.</li>
+            <li>Обновлены значения расчетов для штрафов за мобильность на средней и тяжелой броне.</li>
+            <li>Удалены малые верхние приспособления, такие как коллиматорный прицел и 2x прицел с ракетницы.</li>
+            <li>Квесты теперь позволяют совместное выполнение прогресса, но только первые три квеста каждый день учитываются для завершения уровня.</li>
+        </ul>
+
+        <h3>Исправлено</h3>
+        <ul>
+            <li>RemoveHooks, вызывающий нулевую ссылку на выделенных серверах.</li>
+            <li>Исправлены проблемы с испытаниями для режима одна жизнь.</li>
+            <li>Исправлена возможность получить неполный квест на базе_military_01, обходя переключатели.</li>
+            <li>Добавлен резервный шейдер в SpeedTreeStandard.shader.</li>
+            <li>Проблемы QA с house_old_victorian_03.</li>
+            <li>Проблемы QA с house_old_pyramid_03.</li>
+            <li>Проблемы QA с apartments_06.</li>
+            <li>ParticleSystemSpawnRateLimiter добавлен на кузнечную станцию, химическую станцию, костер, огненную бочку и факелы. Масштабирование выбросов теперь регулируется процентом видеонастроек для частиц.</li>
+            <li>Настроен AlphaStart для материала SemiTransGlow, используемого конусами турелей SMG и Shotgun. Также добавлена логика для лучшего баланса прозрачности между днем и ночью.</li>
+            <li>Проблемы QA, решенные в gas_station_03.</li>
+            <li>Проблемы с текстурами в cabin_04.</li>
+            <li>Проблемы с вырезанием штанов в store_clothing_02.</li>
+            <li>Исправлено соскальзывание шеи зомби Разлагающаяся туша.</li>
+            <li>Проблемы с SI и текстурами в modern_01.</li>
+            <li>Пропавшая краска в house_modern_08.</li>
+            <li>Проблемы с SI на docks_03.</li>
+            <li>Обновление перегрузки слотов инвентаря до выхода из интерфейса и возвращения назад.</li>
+            <li>Розовые деревья на macOS с Metal renderer.</li>
+            <li>Отключены 'custom vertex streams' корневого рендерера системы частиц p_blockdestroy_earth.</li>
+            <li>Снижение производительности и повреждение инвентаря при невозможном высоком качестве предметов.</li>
+            <li>Смерть при возрождении от повреждений на ragdoll.</li>
+            <li>Яма не должна разрушать hordestone.</li>
+            <li>RWG/Navezgane генерирует карты с разрывами в воде. Также исправлены декорации, не размещаемые в подводном биоме.</li>
+            <li>Отражения графики от проб, тусклые или мерцающие на более грубых поверхностях.</li>
+            <li>Мертвые зомби продолжают издавать звуки боли при попадании.</li>
+            <li>Набор действий с транспортным средством не удаляется при отсоединении от транспортного средства (например, при смерти), если окно консоли открыто.</li>
+            <li>Ошибка отображения с добавлением уровня, показывающая 0.</li>
+            <li>Фиолетовые горы и деревья на M2 Metal renderer.</li>
+            <li>Добавлен резервный шейдер в SpeedTree8.shader, так как некоторые системы на базе Metal не могут компилировать существующий.</li>
+            <li>Увеличенное мерцание и размытость AA FSR от дополнительного AA.</li>
+            <li>Эксплойт: дублирование канистр с газом в генераторе при подборе.</li>
+            <li>Обновлены медицинские предметы для правильной работы при лечении других с перком Physician.</li>
+            <li>Изменения качества FSR могут занять некоторое время для обновления резкости текстур.</li>
+            <li>Обновление "Быстрая смена предметов" при переключении на пустой слот (т.е. пустую руку).</li>
+            <li>Перетаскивание и одевание не обновляет модифицированные и немодифицированные предметы должным образом.</li>
+        </ul>
+    </div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = 'Переключить на светлую тему';
+                themeToggle.classList.add('dark');
+            } else {
+                themeToggle.textContent = 'Переключить на темную тему';
+                themeToggle.classList.remove('dark');
+            }
+        });
+        
+        // Audio player controls
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeIconBtn = document.getElementById('volume-icon');
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+        const volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+        const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+
+        let isMuted = false;
+        let previousVolume = 0.50; // Начальная громкость 50%
+
+        // Устанавливаем начальную громкость на 50%
+        audio.volume = previousVolume;
+        volumeBar.value = previousVolume * 100;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        // Смена иконки на play при завершении аудио
+        audio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = playIcon;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (100 / audio.duration) * audio.currentTime;
+            seekBar.value = value;
+
+            const currentMinutes = Math.floor(audio.currentTime / 60);
+            const currentSeconds = Math.floor(audio.currentTime - currentMinutes * 60);
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+
+            const formatTime = (minutes, seconds) => {
+                return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+            if (audio.volume === 0) {
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            } else {
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            }
+        });
+
+        volumeIconBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = previousVolume;
+                volumeBar.value = previousVolume * 100;
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            } else {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeBar.value = 0;
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            }
+            isMuted = !isMuted;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        function formatTime(minutes, seconds) {
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Показать длительность при загрузке страницы
+        window.addEventListener('load', () => {
+            if (audio.readyState >= 1) {
+                const durationMinutes = Math.floor(audio.duration / 60);
+                const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+                timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+            }
+        });
+    </script>
+</body>
+</html>
