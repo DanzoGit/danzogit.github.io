@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Days to Die 1.1 b4 Примечания к выпуску</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="https://danzogit.github.io/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #333333;
+        }
+        body.dark-theme {
+            background-color: #333333;
+            color: #dddddd;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.75em;
+            margin-top: 1em;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 0.75em;
+        }
+        p, li {
+            margin-top: 0.5em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .important-dates {
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+            margin: 1em 0;
+        }
+		.important-dates h3 {
+            margin-top: 0;
+        }
+        body.light-theme .important-dates {
+            background-color: #e9f5ff;
+        }
+        body.dark-theme .important-dates {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+			z-index: 1001; /* Добавим z-index для корректного наложения */
+        }
+        .theme-toggle.dark {
+            background-color: #ffffff;
+            color: #0056b3;
+        }
+		.video-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+        .audio-player-container {
+            position: fixed; /* Фиксированное позиционирование */
+            top: 60px; /* Позиция под кнопкой смены темы */
+            right: 10px;
+            z-index: 1000;
+            background-color: transparent; /* Убираем фон */
+            padding: 20px;
+            border-radius: 5px;
+            /* color: white; Белый текст */
+            /* width: 100%; Увеличиваем ширину */
+            max-width: 500px; /* Максимальная ширина */
+            box-sizing: border-box; /* Включаем padding и border в ширину */
+            text-align: center; /* Выравнивание текста */
+            display: none;
+        }
+        .audio-player-container .audio-title {
+            margin-bottom: 5px; /* Отступ снизу для заголовка */
+            color: inherit; /* Цвет заголовка согласно теме */
+        }
+        .audio-player-container .time-display {
+            margin-bottom: 10px;
+            color: inherit; /* Цвет длительности согласно теме */
+        }
+        .audio-player-container .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause:hover {
+            color: #cccccc;
+        }
+        .audio-player-container .seek-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        .audio-player-container input[type="range"].seek-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        .audio-player-container .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .audio-player-container .volume-icon {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .volume-icon:hover {
+            color: #cccccc;
+        }
+        .audio-player-container input[type="range"].volume-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        /* Адаптивные стили для малых экранов */
+        @media (max-width: 480px) {
+            .audio-player-container {
+                width: calc(100% - 20px); /* Учёт отступов */
+                left: 50%; /* Центрирование */
+                right: auto; /* Сброс правого отступа */
+                transform: translateX(-50%); /* Выравнивание по центру */
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <button class="theme-toggle dark">Переключить на светлую тему</button>
+
+    <div class="audio-player-container">
+        <div class="audio-title">Озвучка страницы</div>
+        <div class="time-display" id="time-display">00:00 / 00:00</div>
+        <div class="audio-player">
+            <audio id="audio-player" src=""></audio>
+            <div class="controls">
+                <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
+                <div class="seek-bar-container">
+                    <input type="range" id="seek-bar" class="seek-bar" value="0" max="100">
+                </div>
+            </div>
+            <div class="volume-container">
+                <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
+            </div>
+        </div>
+    </div>
+
+	<div class="container">
+        <h1>Привет, Выжившие!</h1>
+        <p>После очередной успешной серии исправления ошибок и балансировки, основанных на ваших замечательных отзывах, мы рады объявить о выпуске новой версии для экспериментального тестирования, v1.1 b4.</p>
+        <p>Это обновление устраняет некоторые проблемы, связанные с взаимодействием транспортных средств с коллайдерами игроков, а также аудиопроблемы и множество мелких исправлений различных важных объектов (POI). В связи с этим настоятельно рекомендуется начать новую игру, чтобы полностью насладиться обновленными POI.</p>
+        <p>Мы не забыли и про моддеров: добавили исправление NRE, связанное с пользовательским текстом на знаках в пользовательских POI, добавили событие GameShuttingDown для модов и обновили rwgmixer для поддержки пользовательских названий районов через XML.</p>
+        <p>Для наших пользователей консоли эти изменения и многое другое будут доступны после выпуска стабильной версии v1.1.</p>
+        <p>Что дальше? Наши усилия продолжают сосредотачиваться на устранении ошибок и работе над выпуском стабильной версии v1.1, так что следите за будущими обновлениями!</p>
+        
+        <h2>Как получить доступ к этой версии:</h2>
+        <ol>
+            <li>Щелкните правой кнопкой мыши на "7 Days to Die" в вашей библиотеке Steam.</li>
+            <li>В открывшемся окне выберите "Свойства".</li>
+            <li>Нажмите на вкладку "Бета-версии" слева.</li>
+            <li>В верхнем левом углу выберите из выпадающего списка "latest_experimental".</li>
+            <li>Теперь игра начнет загружаться.</li>
+            <li>После завершения загрузки начните играть!</li>
+        </ol>
+        
+        <h2>Список изменений v1.1 b4:</h2>
+
+        <h3>Добавлено:</h3>
+        <ul>
+            <li>Wilderness_filler_21</li>
+            <li>Событие для модов GameShuttingDown</li>
+            <li>Свойство rwgmixer xml district prefab_name и изменение forest_rural для его использования</li>
+            <li>Lot_vacant_09</li>
+            <li>Аудио интерфейс инвентаря - Различные Ресурсы</li>
+            <li>Аудио интерфейс инвентаря - Ракеты</li>
+        </ul>
+
+        <h3>Изменено:</h3>
+        <ul>
+            <li>Victorian_08 триггер разблокировки дверей для легкого выхода</li>
+            <li>Обновлены несколько испанских переводов для пистолетов и шкафов на основе отзывов сообщества</li>
+            <li>Синхронизация локализации для японских обновлений</li>
+            <li>DMS секция для торговцев читается из npc.xml</li>
+            <li>Сохранение текста фильтра CVar F3 при выходе в главное меню и повторном входе в игру</li>
+            <li>Доступ к воротам Торговца Ректа стал легче, особенно для велосипедов</li>
+            <li>Bungalow_02 легкий выход установлен на Trigger Unlock</li>
+            <li>Увеличена броня транспортных средств и уменьшение повреждений от плуга</li>
+            <li>Увеличена емкость резервного топливного бака транспортных средств</li>
+            <li>Добавлена ключница для быстрого выхода/разблокировки внешних дверей в house_burnt_02</li>
+            <li>Подключены дополнительные двери к ключнице для быстрого выхода/разблокировки в house_old_modular_04, 05, 07</li>
+            <li>Добавлена ключница для быстрого выхода/разблокировки в house_old_tudor_04</li>
+            <li>Удалена завершенная фасада из тестовой карты aaa_arizona_downtown_01</li>
+            <li>Добавлена ключница для быстрого выхода/разблокировки в countrytown_business_07</li>
+            <li>Уменьшено количество спящих в countrytown_business_07 на основе отзывов</li>
+            <li>Художественная проработка и корректировка объема спящих в ranger_station_01</li>
+            <li>Уменьшение Skyscraper_01 на 591,469 вершин и 221,936 треугольников</li>
+            <li>Массовая замена cntBookPile03 новым cntBookPile03AirRandomLootHelper во всех POI</li>
+            <li>Балансировка добычи Store_clothing_02</li>
+            <li>Перестройка района Downtown_building_03 с новыми блоками</li>
+            <li>Исправление текстуры Downtown_filler_31, замена типа блока</li>
+            <li>Блокировка опциональной двери в Hotel_04 для указания, что это не основной путь</li>
+            <li>Улучшение пути в House_modern_27</li>
+            <li>Замена блоков занавесок на вертикальные в Rest_area_05, включена разблокировка выходных дверей</li>
+            <li>Добавление переднего балкона в House_modern_29 для эстетики</li>
+            <li>Исправление некорректной текстуры в Nursing_home_01, установка дверей в режим Trigger Unlock</li>
+            <li>Применение триггеров разблокировки к нескольким дверям в Countrytown_business_08/09/11/12 + быстрая оптимизация + небольшие детали</li>
+            <li>Применение триггеров разблокировки к домам и трейлерам (trailer_01, trailer_03, trailer_11)</li>
+            <li>Небольшие блоки и обновление территории в House_construction_04</li>
+            <li>Применение триггеров разблокировки к Apartments_04</li>
+            <li>Дополнительные корректировки спящих в utility_refinery_02</li>
+            <li>Изменения в Lot_vacant_09 на основе отзывов</li>
+        </ul>
+
+        <h3>Удалено:</h3>
+        <ul>
+            <li>Опция FPSScaling для консолей</li>
+        </ul>
+
+        <h3>Новые эффекты расчленения:</h3>
+        <ul>
+            <li>Hazmat</li>
+            <li>Постоянный эффект электричества при расчленении убитого током зомби</li>
+        </ul>
+
+        <h3>Исправлено:</h3>
+        <ul>
+            <li>Отсутствующая текстура в downtown_filler_05</li>
+            <li>NRE при загрузке мира при использовании пользовательских знаков в пользовательских POI</li>
+            <li>House_old_gambrel_02, пересечение дерева при появлении POI в сгоревшем лесу или снежных биомах, замена на меньшее мертвое дерево</li>
+            <li>Невозможно присоединиться к игре через приглашение Steam, если игрок не прошел экран новостей</li>
+            <li>Текстуры интерфейса, загруженные с веб/файлов, зависят от настройки качества текстур</li>
+            <li>Метаданные ItemValue не клонировались правильно при разделении стаков</li>
+            <li>Имя торговца не локализовано при обмене маркером его местоположения</li>
+            <li>Потенциальный NRE в ServerPasswordWindow</li>
+            <li>Пассивные эффекты с требованиями OR всегда применялись независимо от фактических состояний требований</li>
+            <li>Исправление электрошока на расчлененных культах</li>
+            <li>Плотность на lot_rural_filler POI</li>
+            <li>Rwg_tile_gateway_straight, удаление трех ограждений, не перекрываемых part_driveway_gateway_checkpoint_01 при появлении этого контрольного пункта</li>
+            <li>Remnant_burnt_07, удаление автомобиля с проблемами выравнивания</li>
+            <li>Отсутствие краски в House_old_victorian_10</li>
+            <li>Замена деревянного ковра на тканевый в House_old_ranch_10</li>
+            <li>Невозможно услышать воздушный сброс, если окружающий звук выключен</li>
+            <li>Установка легких выходов на Trigger Unlock в House_burnt_01, 04, 05</li>
+            <li>Установка легкого выхода на Trigger Unlock в House_old_pyramid_01</li>
+            <li>Shrub врезается в стену в School_daycare_01</li>
+            <li>House_old_tudor_02 исключен из culdesac из-за проблем</li>
+            <li>Удаление странного блока земли в House_old_bungalow_12</li>
+            <li>Замена обломков на debris в Bungalow_05</li>
+            <li>Баланс добычи в Store_pharmacy_01</li>
+            <li>Баланс добычи в Bungalow_10</li>
+            <li>Падение FPS из-за очень широких углов прожекторов</li>
+            <li>Скорость транспортного средства не сохранялась на сервере, когда водитель-клиент выходил</li>
+            <li>Предупреждения о кинематике транспортного средства на dedi при выходе водителя</li>
+            <li>Игроки могли сами себя сбросить при выходе из 4x4</li>
+            <li>Игроки могли перевернуть или уничтожить 4x4 при выходе на крутых склонах</li>
+            <li>Отсутствие краски у Trader_jen</li>
+            <li>Автоматические турели пингуют, как защита bedrock/trader, при попадании в грязь</li>
+            <li>Звуки POI не воспроизводятся для клиентов, только для SP или хоста в P2P</li>
+            <li>Автоматическая турель не может нацеливаться на союзников и себя</li>
+            <li>Проблемы с поиском квестов</li>
+            <li>Отключение электрического шока на расчлененных конечностях</li>
+            <li>Проблемы с текстурой расчлененных зомби</li>
+            <li>Проблемы с визуализацией при смене типов стрел для луков</li>
+            <li>Удаление внешних стен/заборов из футбольного стадиона POI, чтобы игроки могли проезжать через него</li>
+            <li>Проблемы с текстурами Skyscraper_01 и уменьшение до 4,158,553 вершин и 1,757,478 треугольников</li>
+            <li>Неправильная краска в Hotel_04</li>
+            <li>Неправильный тип оконного блока в винном погребе House_modern_27, замена текстуры потолка в той же области</li>
+            <li>Пробуждение спящих за задним забором в utility_refinery_02</li>
+            <li>Исправление редкого сбоя Xbox при выходе из режима ожидания на главном меню</li>
+            <li>Неправильная краска у Trader_jen</li>
+            <li>Ловушка-блок в Lodge_01 вызывает зависание света</li>
+            <li>Несоответствующая краска и наложение деревянных блоков в fastfood_06</li>
+            <li>В Hotel_04 требуется открыть дверцу лифта для завершения задания</li>
+            <li>Наложение школьных столов в School_01</li>
+            <li>Проблемы с SI окнами в School_01</li>
+            <li>Несоответствующая текстура вблизи крыши в School_01</li>
+            <li>Отсутствующие теги для перка уменьшения времени изготовления на инженерном верстаке</li>
+        </ul>
+    </div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = 'Переключить на светлую тему';
+                themeToggle.classList.add('dark');
+            } else {
+                themeToggle.textContent = 'Переключить на темную тему';
+                themeToggle.classList.remove('dark');
+            }
+        });
+        
+        // Audio player controls
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeIconBtn = document.getElementById('volume-icon');
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+        const volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+        const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+
+        let isMuted = false;
+        let previousVolume = 0.50; // Начальная громкость 50%
+
+        // Устанавливаем начальную громкость на 50%
+        audio.volume = previousVolume;
+        volumeBar.value = previousVolume * 100;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        // Смена иконки на play при завершении аудио
+        audio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = playIcon;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (100 / audio.duration) * audio.currentTime;
+            seekBar.value = value;
+
+            const currentMinutes = Math.floor(audio.currentTime / 60);
+            const currentSeconds = Math.floor(audio.currentTime - currentMinutes * 60);
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+
+            const formatTime = (minutes, seconds) => {
+                return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+            if (audio.volume === 0) {
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            } else {
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            }
+        });
+
+        volumeIconBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = previousVolume;
+                volumeBar.value = previousVolume * 100;
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            } else {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeBar.value = 0;
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            }
+            isMuted = !isMuted;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        function formatTime(minutes, seconds) {
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Показать длительность при загрузке страницы
+        window.addEventListener('load', () => {
+            if (audio.readyState >= 1) {
+                const durationMinutes = Math.floor(audio.duration / 60);
+                const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+                timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+            }
+        });
+    </script>
+</body>
+</html>
