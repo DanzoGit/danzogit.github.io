@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Days to Die 1.1 b5-b14 Примечания к выпуску</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="https://danzogit.github.io/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #333333;
+        }
+        body.dark-theme {
+            background-color: #333333;
+            color: #dddddd;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.75em;
+            margin-top: 1em;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 0.75em;
+        }
+        p, li {
+            margin-top: 0.5em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .important-dates {
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+            margin: 1em 0;
+        }
+		.important-dates h3 {
+            margin-top: 0;
+        }
+        body.light-theme .important-dates {
+            background-color: #e9f5ff;
+        }
+        body.dark-theme .important-dates {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+			z-index: 1001; /* Добавим z-index для корректного наложения */
+        }
+        .theme-toggle.dark {
+            background-color: #ffffff;
+            color: #0056b3;
+        }
+		.video-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+        .audio-player-container {
+            position: fixed; /* Фиксированное позиционирование */
+            top: 60px; /* Позиция под кнопкой смены темы */
+            right: 10px;
+            z-index: 1000;
+            background-color: transparent; /* Убираем фон */
+            padding: 20px;
+            border-radius: 5px;
+            /* color: white; Белый текст */
+            /* width: 100%; Увеличиваем ширину */
+            max-width: 500px; /* Максимальная ширина */
+            box-sizing: border-box; /* Включаем padding и border в ширину */
+            text-align: center; /* Выравнивание текста */
+            display: none;
+        }
+        .audio-player-container .audio-title {
+            margin-bottom: 5px; /* Отступ снизу для заголовка */
+            color: inherit; /* Цвет заголовка согласно теме */
+        }
+        .audio-player-container .time-display {
+            margin-bottom: 10px;
+            color: inherit; /* Цвет длительности согласно теме */
+        }
+        .audio-player-container .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause:hover {
+            color: #cccccc;
+        }
+        .audio-player-container .seek-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        .audio-player-container input[type="range"].seek-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        .audio-player-container .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .audio-player-container .volume-icon {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .volume-icon:hover {
+            color: #cccccc;
+        }
+        .audio-player-container input[type="range"].volume-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        /* Адаптивные стили для малых экранов */
+        @media (max-width: 480px) {
+            .audio-player-container {
+                width: calc(100% - 20px); /* Учёт отступов */
+                left: 50%; /* Центрирование */
+                right: auto; /* Сброс правого отступа */
+                transform: translateX(-50%); /* Выравнивание по центру */
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <button class="theme-toggle dark">Переключить на светлую тему</button>
+
+    <div class="audio-player-container">
+        <div class="audio-title">Озвучка страницы</div>
+        <div class="time-display" id="time-display">00:00 / 00:00</div>
+        <div class="audio-player">
+            <audio id="audio-player" src=""></audio>
+            <div class="controls">
+                <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
+                <div class="seek-bar-container">
+                    <input type="range" id="seek-bar" class="seek-bar" value="0" max="100">
+                </div>
+            </div>
+            <div class="volume-container">
+                <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
+            </div>
+        </div>
+    </div>
+
+<div class="container">
+        <h1>Привет, Выжившие!</h1>
+        <p>Вот список изменений b5-b14:</p>
+
+        <h2>Добавлено:</h2>
+        <ul>
+            <li>Индикатор скрытности игрока зеленый, если рядом нет врагов, становится желтым при их появлении.</li>
+            <li>Скрытность меньше зависит от движения игрока и увеличивается со временем.</li>
+            <li>countrytown_business_15</li>
+            <li>remnant_downtown_filler_24</li>
+            <li>remnant_downtown_filler_25</li>
+            <li>remnant_downtown_filler_26</li>
+            <li>remnant_downtown_filler_27</li>
+            <li>remnant_downtown_filler_28</li>
+            <li>Поддержка контроллера для 3D-просмотра карты в окне RWG.</li>
+            <li>(Только для ПК) В меню настроек контроллера добавлен выпадающий список стилей иконок контроллера, позволяющий пользователям принудительно выбрать отображение иконок PlayStation или Xbox вместо автоматического определения контроллера и Steam Input.</li>
+            <li>Новые эффекты взрывов для пропановых баллонов, бочек и транспортных средств.</li>
+            <li>Новые звуки инвентаря для перемещения и размещения: Роботизированный молот, турели, ловушки, модификации, верстаки, коллектор росы и другие предметы.</li>
+            <li>Поддержка звуков при поднятии и размещении блоков.</li>
+            <li>Кровавые пятна на Зомби-медведе и Ужасном волке.</li>
+            <li>В редакторе префабов функция "Случайный выбор украшений" теперь также устанавливает случайные повороты объектов.</li>
+            <li>Включение и отключение всех опций в меню настроек Twitch.</li>
+        </ul>
+
+        <h2>Изменено:</h2>
+        <ul>
+            <li>Увеличена дальность зрения и слуха у Медведей и Ужасных волков.</li>
+            <li>Увеличена эффективность скрытности для костюмов Убийцы и Разбойника.</li>
+            <li>Уменьшена дистанция, с которой ИИ выбирает точку для расследования рядом с целью.</li>
+            <li>Балансировка скрытности в зависимости от света в мире и на блоках.</li>
+            <li>Балансировка эффективности скрытности для всех комбинаций навыков, брони и уровней освещения.</li>
+            <li>Улучшен интерфейс скрытности игрока: он стал в два раза более чувствительным к свету и в два раза менее — к звуку, также значения теперь округляются.</li>
+            <li>Сбалансирована скрытность игрока: уменьшено время поиска врагами в зависимости от навыков и брони.</li>
+            <li>Таймер тревоги ИИ начинается после завершения расследования с небольшой случайной задержкой.</li>
+            <li>Обновлены описания "Сбор трофеев", чтобы избежать путаницы в скорости сбора ресурсов.</li>
+            <li>Увеличена длительность всех огненных видов оружия, на которые влияет "Альманах пожарного, том 4", на 1 секунду из-за задержки отображения и округления.</li>
+            <li>Скорректированы потери выносливости и количество атак в минуту для железных и стальных топоров, чтобы они соответствовали железным и стальным киркам.</li>
+            <li>Убраны предметы Т6 из Сброса груза с самолета и Зараженного тайника.</li>
+            <li>Добавлен тег "storeHardware" для темы remnant_business_04.</li>
+            <li>Улучшены поведение зомби, пути и графика для army_camp_07 на основе отзывов игроков.</li>
+            <li>Добавлен звуковой триггер и дополнительные улучшения путей для army_camp_07.</li>
+            <li>Увеличена цена на #mind_wipe и #newbie.</li>
+            <li>#newbie теперь доступен как опция Extra.</li>
+            <li>Время повторного использования Пустые притязания увеличено с 20 до 30 секунд.</li>
+            <li>Обновлен эффект разрушения органических объектов.</li>
+            <li>Обновлены частицы взрывов для мин.</li>
+            <li>Добавлен флаг для отключения бочки при падении.</li>
+            <li>Обновлен значок плода юкки для лучшего соответствия игровым моделям.</li>
+            <li>Обновлен значок кожаных обмоток для лучшего соответствия игровым моделям.</li>
+            <li>Теперь для создания, ремонта и разбора кожаных обмоток используется ткань.</li>
+            <li>Обновлены описания кожаных обмоток: замена упоминаний кожи на ткань.</li>
+            <li>Обновлены теги для различных жалюзи, чтобы они учитывались в задании на сбор полимеров (объекты на карте не отображаются из-за их переизбытка).</li>
+            <li>Снижено количество клейкой ленты, необходимой для создания роботизированных дронов.</li>
+            <li>Минные ловушки обновлены с возможностью ремонта для перка "Лазутчик".</li>
+            <li>Скорректировано свечение глаз у Зомби-медведя и Ужасного волка.</li>
+            <li>Оптимизация памяти, включая рефакторинг RWG для уменьшения использования статических полей, чтобы они могли быть собраны сборщиком мусора.</li>
+            <li>Включено потоковое сжатие mipmap для текстур сущностей, у которых оно отсутствовало.</li>
+            <li>Обработаны эффекты горения зомби.</li>
+            <li>Исправлены неверные/отсутствующие классы, теги и настройки частиц, из-за которых бензоколонки не взрывались должным образом.</li>
+            <li>Обновлены постоянные эффекты электричества при расчленении зомби.</li>
+            <li>Скорректированы списки добычи рюкзаков, кемпингов и автомобилей для уменьшения вероятности появления инструментов/оружия уровня T0 в среднем и позднем этапе игры.</li>
+            <li>Увеличено количество ресурсов, добываемых с помощью бура и бензопилы, на 20%.</li>
+            <li>В downtown_filler_plaza_03 фонтан заменен на новый дизайн.</li>
+            <li>Внесены изменения в прогресс и сохранение игры для корректировки значений разблокировки предметов в книгах по созданию электрических объектов: секция сенсоров с 50 до 45, аккумуляторные блоки и двери с приводом — с 75 до 55. Теперь аккумуляторы начинаются с 55 и заканчиваются на 100.</li>
+            <li>Перенесены разблокировки аккумуляторов на T4 и дверей на T3. Обе разблокируются на 55, но качество аккумуляторов повышается на уровнях 60, 70, 80, 90 и заканчивается на 100 для уровня Т6.</li>
+            <li>Обновлена локализация для навыков создания электрических объектов T3 и T4.</li>
+            <li>Для нескольких блоков, отмеченных как непродаваемые торговцам, экономическая стоимость установлена на 1, чтобы предотвратить злоупотребление арендованными торговыми автоматами (полный баланс экономики будет позже).</li>
+            <li>Скорректированы коллайдеры на жалюзи коммерческого типа.</li>
+            <li>Обновлена локализация для поддержки новых записей.</li>
+        </ul>
+
+        <h2>Исправлено:</h2>
+        <ul>
+            <li>Исправлено состояние гонки между RegionFileManager и PersistentPlayerData, которое могло вызвать редкие исключения.</li>
+            <li>Краш Xbox, если игра приостанавливалась во время начальной загрузки на этапе "Загрузка частиц".</li>
+            <li>Краш Xbox во время сохранения игры.</li>
+            <li>Префикс CVar с "Альманах пожарного, том 4" не работал с коктейлями Молотова.</li>
+            <li>Проблема с неправильным масштабированием curtainDrapesRightHalfTopPrefabVariant, которое отображалось неверно.</li>
+            <li>Проблема с несоответствием конструктивной целостности экрана проектора в skyscraper_02.</li>
+            <li>Прочтение карты сокровищ автоматически активировало ее, отменяя активные задания.</li>
+            <li>Приседание и вставание в ограниченных пространствах могло замедлять бег игрока.</li>
+            <li>Проблемы с текстурами в house_old_modular_05.</li>
+            <li>Замораживание XBS Native Graphics Jobs при переключении на Legacy Graphics Jobs.</li>
+            <li>Проблема с дублированием освещения и неправильной окраской текстур в remnant_skyscraper_05.</li>
+            <li>Двери игрока на расстоянии до 10 метров от торговца блокировались/разблокировались при открытии/закрытии.</li>
+            <li>Невозможно было установить максимальное количество предметов для создания в печи при наличии перка "Продвинутое проектирование".</li>
+            <li>Пропавшая окраска на gas_station_08.</li>
+            <li>Удалены неиспользуемые зомби в house_old_ranch_13.</li>
+            <li>Отсутствие отделки на неокрашенных поверхностях gas_station_08.</li>
+            <li>Удалены стойки с одеждой в store_clothing_01.</li>
+            <li>Проблемы с целостностью конструкций в cave_02.</li>
+            <li>Проблемы с деревьями-помощниками в roadside_park_01.</li>
+            <li>Несоответствие текстур в office_03.</li>
+            <li>Проблемы с текстурами в house_old_modular_05.</li>
+            <li>Дерево застревало в roadside_park_01.</li>
+            <li>Ошибка GUI в Linux после нажатия ESC.</li>
+            <li>Настройки Steam Deck отображались некорректно.</li>
+            <li>Невозможно было создать больше одного инструмента или ручного предмета за раз.</li>
+            <li>Звук размещения предметов в инвентаре не всегда воспроизводился.</li>
+            <li>Некорректные или отсутствующие петли на холодильниках и морозильниках.</li>
+            <li>Блокировка спринта не активируется при использовании комбинаций клавиш, начинающихся с Shift (например, при открытии оверлея Steam/Discord или кругового меню).</li>
+            <li>Прогресс челленджа при получении меда с пней не отслеживался.</li>
+            <li>Проблема AttachParticleEffectToEntity при поджигании персонажей SDCS.</li>
+            <li>Предотвращена возможность включения/выключения фонарика во время использования прицела, если обе функции назначены на одну кнопку.</li>
+            <li>Несоответствие настроек Сброса груза с самолета.</li>
+            <li>Проблема с локализацией в меню списка серверов и ежедневных заданий.</li>
+            <li>Страница новостей не отображала записи в оффлайн-режиме.</li>
+            <li>Плавающий зомби в lot_vacant_04 перед машиной.</li>
+            <li>Несоответствие окраски и другие проблемы в house_modern_23.</li>
+            <li>Зомби могли застревать между двойными столбами.</li>
+            <li>Ошибка с телами, перемещаемыми с кинематической скоростью при проверке выхода за пределы мира.</li>
+            <li>Проблема с прицеливанием контроллера на дронов.</li>
+            <li>Проблемы с плотностью местности в store_hardware_03.</li>
+            <li>Возможность обхода Twitch Actions через расширение.</li>
+            <li>Остановка генерации чанков после длительного исследования мира.</li>
+            <li>Десинхронизация анимаций на удаленных игроках при изменении позы на транспортном средстве в незагруженном чанке.</li>
+            <li>Двухколесные транспортные средства без водителя могли медленно скользить на боках.</li>
+            <li>Проблемы с текстурами и проволокой в installation_red_mesa.</li>
+            <li>Пропавший забор у Торговца Ректа.</li>
+            <li>Проблемы с текстурами в bungalow_12.</li>
+            <li>Проблемы с текстурами в house_modern_05.</li>
+            <li>Воздушный зазор под землей в cave_01.</li>
+            <li>Проблемы с целостностью конструкций в bowling_alley_01.</li>
+            <li>Проблемы с плотностью местности в rural_drive_in_01.</li>
+            <li>Проблемы с плотностью местности в warehouse_08.</li>
+            <li>Мины не взрывались при ремонте.</li>
+            <li>Проблемы с отображением значений настроек в списке серверов.</li>
+            <li>Утечка памяти при просмотре RWG Preview Mesh.</li>
+            <li>Утечка текстур при просмотре материалов/текстур RWG Terrain Preview.</li>
+            <li>Совместные задания с одинаковым местоположением не отслеживались корректно.</li>
+            <li>Проблема с обработкой аудиоклипов для динамической музыки, вызывающая заикания кадров.</li>
+            <li>Перегрузка потоковой передачи текстур после некоторого времени на Xbox S.</li>
+            <li>Хозяин иногда слышал звуки зомби от клиента.</li>
+            <li>Проблемы с локализацией текста для сообщений о нарушениях.</li>
+            <li>Проблема с NullReferenceException в DebugGameStats.</li>
+            <li>Молотовы иногда игнорировали настройку убийства игроков.</li>
+            <li>Активация модификаций предметов не имела звукового индикатора.</li>
+            <li>Животные видели игроков на неверной дистанции.</li>
+            <li>Значение скрытности в темноте было слишком низким по сравнению с реальной освещенностью.</li>
+            <li>Движение головы ИИ рядом со стенами позволяло им видеть через стены, из-за чего скримеры кричали, а плевуны плевались.</li>
+            <li>Исправлено значение для "Классное дедушкино пойло".</li>
+            <li>Проблемы с отрывающимися частями тела у зомби с альтернативной текстурой.</li>
+            <li>Логические ошибки, связанные с лечением конечностей при использовании перка "Медицинский вестник 3".</li>
+            <li>Переработано вычисление бонуса для полного комплекта Фермера, чтобы предотвратить неправильное применение бонуса к здоровью от еды.</li>
+            <li>Сбросы груза с самолета теперь не восприимчивы к эффектам "buffBurningEnvironment", "buffBurningElement", "buffBurningFlamingArrow", "buffBurningMolotov" и "buffIsOnFire".</li>
+            <li>Проблемы с негативным масштабированием коллайдеров на guardRailPole8mInclineFlippedPrefab.</li>
+            <li>Обновлена логика для предотвращения преждевременного лечения конечностей, когда растяжения переходят в переломы.</li>
+            <li>Проблемы с количеством и качеством солнечных батарей в инвентаре торговцев.</li>
+        </ul>
+    </div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = 'Переключить на светлую тему';
+                themeToggle.classList.add('dark');
+            } else {
+                themeToggle.textContent = 'Переключить на темную тему';
+                themeToggle.classList.remove('dark');
+            }
+        });
+        
+        // Audio player controls
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeIconBtn = document.getElementById('volume-icon');
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+        const volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+        const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+
+        let isMuted = false;
+        let previousVolume = 0.50; // Начальная громкость 50%
+
+        // Устанавливаем начальную громкость на 50%
+        audio.volume = previousVolume;
+        volumeBar.value = previousVolume * 100;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        // Смена иконки на play при завершении аудио
+        audio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = playIcon;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (100 / audio.duration) * audio.currentTime;
+            seekBar.value = value;
+
+            const currentMinutes = Math.floor(audio.currentTime / 60);
+            const currentSeconds = Math.floor(audio.currentTime - currentMinutes * 60);
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+
+            const formatTime = (minutes, seconds) => {
+                return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+            if (audio.volume === 0) {
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            } else {
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            }
+        });
+
+        volumeIconBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = previousVolume;
+                volumeBar.value = previousVolume * 100;
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            } else {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeBar.value = 0;
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            }
+            isMuted = !isMuted;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        function formatTime(minutes, seconds) {
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Показать длительность при загрузке страницы
+        window.addEventListener('load', () => {
+            if (audio.readyState >= 1) {
+                const durationMinutes = Math.floor(audio.duration / 60);
+                const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+                timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+            }
+        });
+    </script>
+</body>
+</html>
