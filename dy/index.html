@@ -9,7 +9,7 @@
   <body class="black-bg">
     <h2 class="main-title">Восстановление доступа к Discord, YouTube и другим заблокированным сайтам.<br />
       Готовые решения для ПК и телефона.<br />
-      Обновление от 20.10.2024.</h2>
+      Обновление от 24.10.2024.</h2>
 
     <!-- Обновления -->
     <details class="update-details">
@@ -82,23 +82,31 @@
           Далее следуем инструкции по установке zapret.
           </p>
         </details>
+
+        <details class="update-details">
+          <summary>Обновление от 20.10.2024 для zapret</summary>
+          <p>
+          Обновлен winws.exe из оригинального репозитория zapret'а.<br />
+          Правила UDP для дискорда заменены на список подсетей и IP.<br />
+          Убраны лишние хосты, которые ни на что не влияли.<br />
+          Добавлены хосты:<br />
+          ytimg.l.google.com<br />
+          jnn-pa.googleapis.com<br />
+          frankerfacez.com<br />
+          <br />
+          Чтобы изменения вступили в силу, проделываем шаги ниже.<br />
+          <br />
+          Удаляем установленный сервис, запустив <span class="highlight">service_remove</span>.bat <span class="highlight">от имени администратора</span> в папке с zapret.<br />
+          Перезагружаем ПК.<br />
+          Далее следуем инструкции по установке zapret.
+          </p>
+        </details>
     </details>
+
     <details class="update-details">
-      <summary>Обновление от 20.10.2024 для zapret</summary>
+      <summary>Обновление от 24.10.2024 для AmneziaWG</summary>
       <p>
-      Обновлен winws.exe из оригинального репозитория zapret'а.<br />
-      Правила UDP для дискорда заменены на список подсетей и IP.<br />
-      Убраны лишние хосты, которые ни на что не влияли.<br />
-      Добавлены хосты:<br />
-      ytimg.l.google.com<br />
-      jnn-pa.googleapis.com<br />
-      frankerfacez.com<br />
-      <br />
-      Чтобы изменения вступили в силу, проделываем шаги ниже.<br />
-      <br />
-      Удаляем установленный сервис, запустив <span class="highlight">service_remove</span>.bat <span class="highlight">от имени администратора</span> в папке с zapret.<br />
-      Перезагружаем ПК.<br />
-      Далее следуем инструкции по установке zapret.
+      Добавил ссылку на бота для генерации конфигурации AmneziaWG.
       </p>
     </details>
 
@@ -176,27 +184,33 @@
       Перезагружаем ПК.<br />
       Скачиваем, устанавливаем - <a href="https://github.com/amnezia-vpn/amneziawg-windows-client/releases/download/1.0.0/amneziawg-amd64-1.0.0.msi" target="_blank" class="highlight-link">https://github.com/amnezia-vpn/amneziawg-windows-client/releases/download/1.0.0/amneziawg-amd64-1.0.0.msi</a>.<br />
       Пока не запускаем.<br />
-      Переходим по ссылке - <a href="https://colab.research.google.com/drive/1rmeqQvUlSJfgGK1NYpBMOwQdwi_Xk924?usp=sharing" target="_blank" class="highlight-link">https://colab.research.google.com/drive/1rmeqQvUlSJfgGK1NYpBMOwQdwi_Xk924?usp=sharing</a>.<br />
-      <br />
-      Нажимаем маленькую иконку запуска:<br />
-      <a href="https://danzogit.github.io/dy/wg1.png" target="_blank"><img src="https://danzogit.github.io/dy/wg1.png"></a><br />
-      <br />
-      Подтверждаем, нажав кнопку Выполнить.:<br />
-      <a href="https://danzogit.github.io/dy/wg2.png" target="_blank"><img src="https://danzogit.github.io/dy/wg2.png"></a><br />
-      <br />
-      Дожидаемся завершения операции, появится зеленая галочка.<br />
-      При этом не обращаем внимание на большое количество непонятного текста:<br />
-      <a href="https://danzogit.github.io/dy/wg3.png" target="_blank"><img src="https://danzogit.github.io/dy/wg3.png"></a><br />
-      <br />
-      Прокручиваем ниже, жмем вторую кнопку запуска:<br />
-      <a href="https://danzogit.github.io/dy/wg4.png" target="_blank"><img src="https://danzogit.github.io/dy/wg4.png"></a><br />
-      <br />
-      Дожидаемся завершения:<br />
-      <a href="https://danzogit.github.io/dy/wg5.png" target="_blank"><img src="https://danzogit.github.io/dy/wg5.png"></a><br />
-      <br />
-      Прокручиваем вниз и скачиваем конфигурацию по ссылке:<br />
-      <a href="https://danzogit.github.io/dy/wg6.png" target="_blank"><img src="https://danzogit.github.io/dy/wg6.png"></a><br />
-      <br />
+      Генерируем конфигурацию через бота в ТГ - <a href="https://t.me/awg_generatorbot" target="_blank" class="highlight-link">https://t.me/awg_generatorbot</a>.<br />
+      <details class="update-details">
+        <summary>Если бот не работает</summary>
+        <p>
+        Переходим по ссылке - <a href="https://colab.research.google.com/drive/1rmeqQvUlSJfgGK1NYpBMOwQdwi_Xk924?usp=sharing" target="_blank" class="highlight-link">https://colab.research.google.com/drive/1rmeqQvUlSJfgGK1NYpBMOwQdwi_Xk924?usp=sharing</a>.<br />
+        <br />
+        Нажимаем маленькую иконку запуска:<br />
+        <a href="https://danzogit.github.io/dy/wg1.png" target="_blank"><img src="https://danzogit.github.io/dy/wg1.png"></a><br />
+        <br />
+        Подтверждаем, нажав кнопку Выполнить.:<br />
+        <a href="https://danzogit.github.io/dy/wg2.png" target="_blank"><img src="https://danzogit.github.io/dy/wg2.png"></a><br />
+        <br />
+        Дожидаемся завершения операции, появится зеленая галочка.<br />
+        При этом не обращаем внимание на большое количество непонятного текста:<br />
+        <a href="https://danzogit.github.io/dy/wg3.png" target="_blank"><img src="https://danzogit.github.io/dy/wg3.png"></a><br />
+        <br />
+        Прокручиваем ниже, жмем вторую кнопку запуска:<br />
+        <a href="https://danzogit.github.io/dy/wg4.png" target="_blank"><img src="https://danzogit.github.io/dy/wg4.png"></a><br />
+        <br />
+        Дожидаемся завершения:<br />
+        <a href="https://danzogit.github.io/dy/wg5.png" target="_blank"><img src="https://danzogit.github.io/dy/wg5.png"></a><br />
+        <br />
+        Прокручиваем вниз и скачиваем конфигурацию по ссылке:<br />
+        <a href="https://danzogit.github.io/dy/wg6.png" target="_blank"><img src="https://danzogit.github.io/dy/wg6.png"></a>
+        </p>
+      </details>
+      <!-- <br /> -->
       Запускаем AmneziaWG, жмем <span class="highlight">Импорт туннелей из файла</span> и выбираем нашу конфигурацию:<br />
       <a href="https://danzogit.github.io/dy/wg7.png" target="_blank"><img src="https://danzogit.github.io/dy/wg7.png"></a><br />
       <a href="https://danzogit.github.io/dy/wg8.png" target="_blank"><img src="https://danzogit.github.io/dy/wg8.png"></a><br />
@@ -246,7 +260,7 @@
       <p>
       Для Android в Google Play - <a href="https://play.google.com/store/apps/details?id=org.amnezia.awg" target="_blank" class="highlight-link">https://play.google.com/store/apps/details?id=org.amnezia.awg</a>.<br />
       Для IOS в AppStore - <a href="https://apps.apple.com/pl/app/amneziawg/id6478942365" target="_blank" class="highlight-link">https://apps.apple.com/pl/app/amneziawg/id6478942365</a>.<br />
-      Нужно будет также сгенерировать конфигурацию из способов выше и импортировать его в приложение.<br />
+      Нужно будет также сгенерировать конфигурацию из 3 способа (AmneziaWG) и импортировать ее в приложение.<br />
       Либо скачав конфигурацию на телефон, либо с ПК скопировать текст конфигурации и создать QR код через сайт - <a href="https://ru.qr-code-generator.com/" target="_blank" class="highlight-link">https://ru.qr-code-generator.com/</a>.<br />
       Затем отсканировать код в приложении.<br />
       Называем туннель любым именем, включаем - готово.
