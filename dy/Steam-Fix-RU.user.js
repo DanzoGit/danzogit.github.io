@@ -2,7 +2,7 @@
 // @name         Steam Fix RU
 // @namespace    Steam Fix RU
 // @version      1.2
-// @updateURL	https://danzogit.github.io/dy/Steam-Fix-RU.js
+// @updateURL	https://danzogit.github.io/dy/Steam-Fix-RU.user.js
 // @description  Убирает параметр `l=russian` из URL для CSS
 // @match        *://store.steampowered.com/*
 // @grant        none
