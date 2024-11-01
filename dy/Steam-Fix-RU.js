@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Remove Language Parameter
-// @namespace    Remove Language Parameter
+// @name         Steam Fix RU
+// @namespace    Steam Fix RU
 // @version      1.2
-// @updateURL	https://danzogit.github.io/dy/Remove-Language-Parameter-1.2.user.js
+// @updateURL	https://danzogit.github.io/dy/Steam-Fix-RU.js
 // @description  Убирает параметр `l=russian` из URL для CSS
 // @match        *://store.steampowered.com/*
 // @grant        none
