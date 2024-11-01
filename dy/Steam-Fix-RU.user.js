@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Steam Fix RU
 // @namespace    Steam Fix RU
-// @version      1.0.1
+// @version      1.1
 // @author		Danzo
 // @updateURL	https://danzogit.github.io/dy/Steam-Fix-RU.user.js
 // @downloadURL    https://danzogit.github.io/dy/Steam-Fix-RU.user.js
-// @description  Убирает параметр `l=russian` из URL для CSS
+// @description  Убирает параметр `l=russian` из URL для CSS и JS
 // @match        *://store.steampowered.com/*
 // @grant        none
 // @run-at       document-start
@@ -15,12 +15,30 @@
     'use strict';
 
     function removeLanguageParam() {
-        // Находим все ссылки на CSS
-        document.querySelectorAll('link[rel="stylesheet"], script').forEach(resource => {
-            let url = new URL(resource.href);
-            if (url.searchParams.get('l') === 'russian') {
-                url.searchParams.delete('l');
-                resource.href = url.toString(); // Обновляем URL ресурса
+        // Находим все CSS и JavaScript ресурсы
+        document.querySelectorAll('link[rel="stylesheet"], script[src]').forEach(resource => {
+            // Определяем нужный атрибут (href для link и src для script)
+            const urlAttr = resource.tagName === 'LINK' ? 'href' : 'src';
+            
+            // Проверяем, что атрибут существует и начинается с 'http'
+            if (resource[urlAttr] && resource[urlAttr].startsWith('http')) {
+                try {
+                    let url = new URL(resource[urlAttr]);
+
+                    // Удаляем параметр l=russian, если он присутствует
+                    if (url.searchParams.get('l') === 'russian') {
+						// Логируем исходный URL
+						// console.log("Detected resource:", url.toString());
+						
+                        url.searchParams.delete('l');
+                        resource[urlAttr] = url.toString();
+
+                        // Логируем новый URL после удаления параметра
+                        // console.log("Updated resource:", resource[urlAttr]);
+                    }
+                } catch (e) {
+                    console.error("Invalid URL detected:", resource[urlAttr], e);
+                }
             }
         });
     }
@@ -29,6 +47,6 @@
     removeLanguageParam();
 
     // Используем MutationObserver для обработки новых ресурсов, добавленных динамически
-    // const observer = new MutationObserver(removeLanguageParam);
-    // observer.observe(document.head || document.documentElement, { childList: true, subtree: true });
+    const observer = new MutationObserver(removeLanguageParam);
+    observer.observe(document.head || document.documentElement, { childList: true, subtree: true });
 })();
