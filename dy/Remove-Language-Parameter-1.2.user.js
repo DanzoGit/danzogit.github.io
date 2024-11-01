@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Remove Language Parameter
-// @namespace    http://tampermonkey.net/
+// @namespace    Remove Language Parameter
 // @version      1.2
+// @updateURL	https://danzogit.github.io/dy/Remove-Language-Parameter-1.2.user.js
 // @description  Убирает параметр `l=russian` из URL ресурсов на этапе загрузки
 // @match        *://store.steampowered.com/*
 // @grant        none
