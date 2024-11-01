@@ -3,7 +3,7 @@
 // @namespace    Remove Language Parameter
 // @version      1.2
 // @updateURL	https://danzogit.github.io/dy/Remove-Language-Parameter-1.2.user.js
-// @description  Убирает параметр `l=russian` из URL ресурсов на этапе загрузки
+// @description  Убирает параметр `l=russian` из URL для CSS
 // @match        *://store.steampowered.com/*
 // @grant        none
 // @run-at       document-start
@@ -13,7 +13,7 @@
     'use strict';
 
     function removeLanguageParam() {
-        // Находим все ссылки на CSS-файлы и другие ресурсы
+        // Находим все ссылки на CSS
         document.querySelectorAll('link[rel="stylesheet"], script').forEach(resource => {
             let url = new URL(resource.href);
             if (url.searchParams.get('l') === 'russian') {
