@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Days to Die V1.2 b22 Примечания к выпуску</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="https://danzogit.github.io/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #333333;
+        }
+        body.dark-theme {
+            background-color: #333333;
+            color: #dddddd;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.75em;
+            margin-top: 1em;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 0.75em;
+        }
+        p, li {
+            margin-top: 0.5em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .important-dates {
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+            margin: 1em 0;
+        }
+		.important-dates h3 {
+            margin-top: 0;
+        }
+        body.light-theme .important-dates {
+            background-color: #e9f5ff;
+        }
+        body.dark-theme .important-dates {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+			z-index: 1001; /* Добавим z-index для корректного наложения */
+        }
+        .theme-toggle.dark {
+            background-color: #ffffff;
+            color: #0056b3;
+        }
+		.video-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+        .audio-player-container {
+            position: fixed; /* Фиксированное позиционирование */
+            top: 60px; /* Позиция под кнопкой смены темы */
+            right: 10px;
+            z-index: 1000;
+            background-color: transparent; /* Убираем фон */
+            padding: 20px;
+            border-radius: 5px;
+            /* color: white; Белый текст */
+            /* width: 100%; Увеличиваем ширину */
+            max-width: 500px; /* Максимальная ширина */
+            box-sizing: border-box; /* Включаем padding и border в ширину */
+            text-align: center; /* Выравнивание текста */
+            display: none;
+        }
+        .audio-player-container .audio-title {
+            margin-bottom: 5px; /* Отступ снизу для заголовка */
+            color: inherit; /* Цвет заголовка согласно теме */
+        }
+        .audio-player-container .time-display {
+            margin-bottom: 10px;
+            color: inherit; /* Цвет длительности согласно теме */
+        }
+        .audio-player-container .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause:hover {
+            color: #cccccc;
+        }
+        .audio-player-container .seek-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        .audio-player-container input[type="range"].seek-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        .audio-player-container .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .audio-player-container .volume-icon {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .volume-icon:hover {
+            color: #cccccc;
+        }
+        .audio-player-container input[type="range"].volume-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        /* Адаптивные стили для малых экранов */
+        @media (max-width: 480px) {
+            .audio-player-container {
+                width: calc(100% - 20px); /* Учёт отступов */
+                left: 50%; /* Центрирование */
+                right: auto; /* Сброс правого отступа */
+                transform: translateX(-50%); /* Выравнивание по центру */
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <button class="theme-toggle dark">Переключить на светлую тему</button>
+
+    <div class="audio-player-container">
+        <div class="audio-title">Озвучка страницы</div>
+        <div class="time-display" id="time-display">00:00 / 00:00</div>
+        <div class="audio-player">
+            <audio id="audio-player" src=""></audio>
+            <div class="controls">
+                <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
+                <div class="seek-bar-container">
+                    <input type="range" id="seek-bar" class="seek-bar" value="0" max="100">
+                </div>
+            </div>
+            <div class="volume-container">
+                <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Вот версия 1.2 b22 EXP для всех вас.</h1>
+        <p>Пока команда активно работает над V2.0, мы хотели, чтобы вы смогли быстрее получить исправления, оптимизации и подготовку к кроссплатформенной игре на консолях.</p>
+        <p>В этой сборке мы представляем различные оптимизации для всех платформ, а также добавляем возможность генерации карт RWG для наших поклонников на консолях. Кроссплатформенная игра будет полностью доступна после завершения экспериментальной фазы, когда V1.2 станет стабильной, и пользователи консолей получат к ней доступ. До этого момента кроссплей будет недоступен.</p>
+        <p>Это позволит играть вместе пользователям PS5, Xbox Series X|S и ПК, однако выделенные серверы пока не предусмотрены.</p>
+        <p>V1.2 должна быть совместима с существующими сохранениями, но для лучшего опыта мы рекомендуем начать новую игру.</p>
+
+        <h2>Как участвовать:</h2>
+        <ul>
+            <li>Кликните правой кнопкой мыши на игру в Steam.</li>
+            <li>Нажмите "Свойства".</li>
+            <li>Перейдите на вкладку "Бета-версии".</li>
+            <li>В выпадающем меню выберите <b>latest_experimental</b> &lt;— выберите именно это.</li>
+            <li>Подождите, пока игра загрузится.</li>
+        </ul>
+
+        <h2>Список изменений:</h2>
+
+        <h3>Добавлено:</h3>
+        <ul>
+            <li>Кроссплатформенные черные списки.</li>
+            <li>Реализованы режимы графики "Производительность/Качество" для консолей, доступные через настройки видео.</li>
+            <li>Новая модель Зомби-стервятника.</li>
+            <li>Новые модели Кролика и Курицы.</li>
+            <li>Задержки спавна в биомах теперь имеют 10% случайную вариацию.</li>
+            <li>Звук экстренного вещания на CRT-телевизорах (*включается вместе со светом).</li>
+            <li>Группы спящих сбрасывают доступные точки спавна, если все уже были использованы.</li>
+            <li>Деревья в менеджере декораций группируются с асинхронной загрузкой и равномерным распределением нагрузки.</li>
+            <li>Дополнительные префабы пламени для Тлеющих зомби.</li>
+            <li>Звуковые эффекты для бонуса крафта из Прикида ботана.</li>
+            <li>Исправлены отсутствующие текстуры искр для мин.</li>
+        </ul>
+
+        <h3>Изменено:</h3>
+        <ul>
+            <li>Переработан рендеринг от первого лица с использованием одной камеры.</li>
+            <li>Отключено старое масштабирование разрешения и включен FSR в режиме "Производительность" на всех консольных платформах.</li>
+            <li>Включены элементы меню RWG для консолей.</li>
+            <li>Разрешено открывать окно чата, даже если связь заблокирована.</li>
+            <li>Реализован просмотр профиля пользователя для PS5.</li>
+            <li>Оптимизированы группы эффектов сущностей, убраны дублирующие параметры предков.</li>
+            <li>Улучшены спавнеры сущностей в биомах: таймеры работают независимо от количества, что исключает превышение лимита спавна.</li>
+            <li>Перебалансированы параметры и задержки спавна сущностей в биомах.</li>
+            <li>Убран проверочный скрипт для спавна спящих в самой дальней позиции.</li>
+            <li>Улучшены правила деспавна активных спящих для большего расстояния и времени.</li>
+            <li>Оптимизирована очистка материалов.</li>
+            <li>Оптимизирован пул объектов и контейнеры.</li>
+            <li>Оптимизированы объемы стен чанков.</li>
+            <li>Настройка яркости видео затемняет интерьер и ночь при уровне ниже 50%.</li>
+            <li>Немного уменьшена самая темная зона лунного света.</li>
+            <li>У модификации Налобного фонаря уменьшен радиус действия.</li>
+            <li>Оптимизирован поиск объектов в дочерних элементах.</li>
+            <li>Оптимизирован поиск типа модели для спавна сущностей.</li>
+            <li>Обновлены звуки Скримера.</li>
+            <li>Солнечные батареи больше нельзя перерабатывать.</li>
+            <li>Кабан-мутант ("Грейс") больше не является пищей для зомби.</li>
+        </ul>
+
+        <h3>Исправлено:</h3>
+        <ul>
+            <li>"Железные потроха" не применялись при входе в игру.</li>
+            <li>Друзья Xbox/PS5 не отображались в браузере серверов.</li>
+            <li>Превью RWG не удаляло некоторые обработчики кнопок при закрытии.</li>
+            <li>Сервер не логировал имена отправителей чата.</li>
+            <li>NRE и потеря управления при разрушении знака или ящика во время ввода текста.</li>
+            <li>Копирование + вставка уничтожали вкладки и переносы строк.</li>
+            <li>Ошибка загрузки префабов с ExcludePOICulling=true из-за устаревших файлов ins.</li>
+            <li>Группы эффектов не наследовались в правильном порядке в XML-классе сущностей.</li>
+            <li>Менеджер транспортных средств повторно спавнил транспорт, если другой объект имел тот же ID.</li>
+            <li>Таймер зомби-спавнера в биоме мог быть отключен, если игрок ни разу не убивал зомби (старые данные удаляются, и спавн возобновляется).</li>
+            <li>Спавнеры в биомах могли конфликтовать, используя одни и те же данные статуса.</li>
+            <li>Проблема с LOD стрел при увеличении и уменьшении масштаба, когда лук натянут.</li>
+            <li>Отсутствие респавна в мини-скриптах групп спящих, если сущность деспавнилась.</li>
+            <li>Задержка при падении игрока зависела от частоты кадров.</li>
+            <li>Простые префабы вроде part_streetlight_single создавали пустую сетку-импостер.</li>
+            <li>Чанки, копируемые в Unity, могли изредка содержать неправильные объекты, блокируя копирование.</li>
+            <li>Простейшая одежда имела проблему чтения/записи.</li>
+            <li>Исключения и NRE при выходе в главное меню.</li>
+            <li>Объемы стен добавлялись в чанки, которые они не перекрывали, и имели ненужные отступы.</li>
+            <li>Группы спящих и триггеры добавлялись в чанки, которые они не перекрывали.</li>
+            <li>Батареи и солнечные панели издавали звуки при повторном входе в игру.</li>
+            <li>Факелы, размещенные игроком, имели дублирующий аудиоплеер.</li>
+            <li>Источники звука с эффектом доплера могли скрипеть или пропадать при телепортации игрока или изменении координат мира.</li>
+            <li>Менеджер звуков продолжал отслеживать уничтоженные звуки.</li>
+            <li>Настройка обилия лута ниже 100% давала меньше, чем ожидалось.</li>
+            <li>Событие Twitch "Камень призыва" не должно автоматически респавниться.</li>
+            <li>Тактическая штурмовая винтовка отсутствовала в модели коллиматорного прицела.</li>
+            <li>Морфинг головного убора не отображался в режиме от первого лица.</li>
+            <li>Инвентарь дрона мог откатиться как у клиента при использовании мода на лечение.</li>
+            <li>Дрон не мог лечить игрока, находясь на транспорте.</li>
+            <li>Первый раз, когда дрон пытался вылечить игрока после дебаффа, он не справлялся.</li>
+        </ul>
+    </div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = 'Переключить на светлую тему';
+                themeToggle.classList.add('dark');
+            } else {
+                themeToggle.textContent = 'Переключить на темную тему';
+                themeToggle.classList.remove('dark');
+            }
+        });
+        
+        // Audio player controls
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeIconBtn = document.getElementById('volume-icon');
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+        const volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+        const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+
+        let isMuted = false;
+        let previousVolume = 0.50; // Начальная громкость 50%
+
+        // Устанавливаем начальную громкость на 50%
+        audio.volume = previousVolume;
+        volumeBar.value = previousVolume * 100;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        // Смена иконки на play при завершении аудио
+        audio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = playIcon;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (100 / audio.duration) * audio.currentTime;
+            seekBar.value = value;
+
+            const currentMinutes = Math.floor(audio.currentTime / 60);
+            const currentSeconds = Math.floor(audio.currentTime - currentMinutes * 60);
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+
+            const formatTime = (minutes, seconds) => {
+                return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+            if (audio.volume === 0) {
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            } else {
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            }
+        });
+
+        volumeIconBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = previousVolume;
+                volumeBar.value = previousVolume * 100;
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            } else {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeBar.value = 0;
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            }
+            isMuted = !isMuted;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        function formatTime(minutes, seconds) {
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Показать длительность при загрузке страницы
+        window.addEventListener('load', () => {
+            if (audio.readyState >= 1) {
+                const durationMinutes = Math.floor(audio.duration / 60);
+                const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+                timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+            }
+        });
+    </script>
+</body>
+</html>
