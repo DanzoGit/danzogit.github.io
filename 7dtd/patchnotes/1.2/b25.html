@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Days to Die V1.2 b24-25 Примечания к выпуску</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="https://danzogit.github.io/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #333333;
+        }
+        body.dark-theme {
+            background-color: #333333;
+            color: #dddddd;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.75em;
+            margin-top: 1em;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 0.75em;
+        }
+        p, li {
+            margin-top: 0.5em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .important-dates {
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+            margin: 1em 0;
+        }
+		.important-dates h3 {
+            margin-top: 0;
+        }
+        body.light-theme .important-dates {
+            background-color: #e9f5ff;
+        }
+        body.dark-theme .important-dates {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+			z-index: 1001; /* Добавим z-index для корректного наложения */
+        }
+        .theme-toggle.dark {
+            background-color: #ffffff;
+            color: #0056b3;
+        }
+		.video-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+        .audio-player-container {
+            position: fixed; /* Фиксированное позиционирование */
+            top: 60px; /* Позиция под кнопкой смены темы */
+            right: 10px;
+            z-index: 1000;
+            background-color: transparent; /* Убираем фон */
+            padding: 20px;
+            border-radius: 5px;
+            /* color: white; Белый текст */
+            /* width: 100%; Увеличиваем ширину */
+            max-width: 500px; /* Максимальная ширина */
+            box-sizing: border-box; /* Включаем padding и border в ширину */
+            text-align: center; /* Выравнивание текста */
+            display: none;
+        }
+        .audio-player-container .audio-title {
+            margin-bottom: 5px; /* Отступ снизу для заголовка */
+            color: inherit; /* Цвет заголовка согласно теме */
+        }
+        .audio-player-container .time-display {
+            margin-bottom: 10px;
+            color: inherit; /* Цвет длительности согласно теме */
+        }
+        .audio-player-container .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause:hover {
+            color: #cccccc;
+        }
+        .audio-player-container .seek-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        .audio-player-container input[type="range"].seek-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        .audio-player-container .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .audio-player-container .volume-icon {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .volume-icon:hover {
+            color: #cccccc;
+        }
+        .audio-player-container input[type="range"].volume-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        /* Адаптивные стили для малых экранов */
+        @media (max-width: 480px) {
+            .audio-player-container {
+                width: calc(100% - 20px); /* Учёт отступов */
+                left: 50%; /* Центрирование */
+                right: auto; /* Сброс правого отступа */
+                transform: translateX(-50%); /* Выравнивание по центру */
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <button class="theme-toggle dark">Переключить на светлую тему</button>
+
+    <div class="audio-player-container">
+        <div class="audio-title">Озвучка страницы</div>
+        <div class="time-display" id="time-display">00:00 / 00:00</div>
+        <div class="audio-player">
+            <audio id="audio-player" src=""></audio>
+            <div class="controls">
+                <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
+                <div class="seek-bar-container">
+                    <input type="range" id="seek-bar" class="seek-bar" value="0" max="100">
+                </div>
+            </div>
+            <div class="volume-container">
+                <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Привет, выжившие!</h1>
+        <p>У нас есть небольшой патч для экспериментальной версии 1.2.</p>
+        <p>TFP желает всем отличных выходных!</p>
+
+        <h2>Добавлено:</h2>
+        <ul>
+            <li>Максимальное количество активных зомби во время кровавой луны в группе теперь масштабируется в зависимости от полного состава группы игроков и уровня игры.</li>
+        </ul>
+
+        <h2>Изменено:</h2>
+        <ul>
+            <li>Оптимизированы транспортные средства, чтобы они больше не использовали объект-контейнер.</li>
+            <li>Увеличено расстояние, на котором можно добавлять игроков в группу на кровавую луну.</li>
+        </ul>
+
+        <h2>Исправлено:</h2>
+        <ul>
+            <li>Невидимый персонаж при перемещении от торговца на транспортном средстве.</li>
+            <li>Сбои положения камеры транспортного средства при смещении точки отсчета.</li>
+            <li>Предупреждения EntityFactory GetEntityType, связанные с отсутствующими типами.</li>
+        </ul>
+
+        <h2>Хотфикс b25:</h2>
+        <h3>Исправлено:</h3>
+        <ul>
+            <li>Почти невидимые движущиеся животные при определенных настройках FSR.</li>
+        </ul>
+    </div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = 'Переключить на светлую тему';
+                themeToggle.classList.add('dark');
+            } else {
+                themeToggle.textContent = 'Переключить на темную тему';
+                themeToggle.classList.remove('dark');
+            }
+        });
+        
+        // Audio player controls
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeIconBtn = document.getElementById('volume-icon');
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+        const volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+        const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+
+        let isMuted = false;
+        let previousVolume = 0.50; // Начальная громкость 50%
+
+        // Устанавливаем начальную громкость на 50%
+        audio.volume = previousVolume;
+        volumeBar.value = previousVolume * 100;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        // Смена иконки на play при завершении аудио
+        audio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = playIcon;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (100 / audio.duration) * audio.currentTime;
+            seekBar.value = value;
+
+            const currentMinutes = Math.floor(audio.currentTime / 60);
+            const currentSeconds = Math.floor(audio.currentTime - currentMinutes * 60);
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+
+            const formatTime = (minutes, seconds) => {
+                return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+            if (audio.volume === 0) {
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            } else {
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            }
+        });
+
+        volumeIconBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = previousVolume;
+                volumeBar.value = previousVolume * 100;
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            } else {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeBar.value = 0;
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            }
+            isMuted = !isMuted;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        function formatTime(minutes, seconds) {
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Показать длительность при загрузке страницы
+        window.addEventListener('load', () => {
+            if (audio.readyState >= 1) {
+                const durationMinutes = Math.floor(audio.duration / 60);
+                const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+                timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+            }
+        });
+    </script>
+</body>
+</html>
