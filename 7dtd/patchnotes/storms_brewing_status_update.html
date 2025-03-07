@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2.0 Storms Brewing: Статус обновления</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="https://danzogit.github.io/favicon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #333333;
+        }
+        body.dark-theme {
+            background-color: #333333;
+            color: #dddddd;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.75em;
+            margin-top: 1em;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 0.75em;
+        }
+        p, li {
+            margin-top: 0.5em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .important-dates {
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+            margin: 1em 0;
+        }
+		.important-dates h3 {
+            margin-top: 0;
+        }
+        body.light-theme .important-dates {
+            background-color: #e9f5ff;
+        }
+        body.dark-theme .important-dates {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+			z-index: 1001; /* Добавим z-index для корректного наложения */
+        }
+        .theme-toggle.dark {
+            background-color: #ffffff;
+            color: #0056b3;
+        }
+		.video-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+        .audio-player-container {
+            position: fixed; /* Фиксированное позиционирование */
+            top: 60px; /* Позиция под кнопкой смены темы */
+            right: 10px;
+            z-index: 1000;
+            background-color: transparent; /* Убираем фон */
+            padding: 20px;
+            border-radius: 5px;
+            /* color: white; Белый текст */
+            /* width: 100%; Увеличиваем ширину */
+            max-width: 500px; /* Максимальная ширина */
+            box-sizing: border-box; /* Включаем padding и border в ширину */
+            text-align: center; /* Выравнивание текста */
+            display: none;
+        }
+        .audio-player-container .audio-title {
+            margin-bottom: 5px; /* Отступ снизу для заголовка */
+            color: inherit; /* Цвет заголовка согласно теме */
+        }
+        .audio-player-container .time-display {
+            margin-bottom: 10px;
+            color: inherit; /* Цвет длительности согласно теме */
+        }
+        .audio-player-container .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .play-pause:hover {
+            color: #cccccc;
+        }
+        .audio-player-container .seek-bar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        .audio-player-container input[type="range"].seek-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        .audio-player-container .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .audio-player-container .volume-icon {
+            background-color: transparent;
+            border: none;
+            color: inherit; /* Цвет кнопки согласно теме */
+            cursor: pointer;
+            font-size: 1.5em;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-player-container .volume-icon:hover {
+            color: #cccccc;
+        }
+        .audio-player-container input[type="range"].volume-bar {
+            width: 100%;
+            max-width: 250px; /* Максимальная ширина */
+            cursor: pointer;
+        }
+        /* Адаптивные стили для малых экранов */
+        @media (max-width: 480px) {
+            .audio-player-container {
+                width: calc(100% - 20px); /* Учёт отступов */
+                left: 50%; /* Центрирование */
+                right: auto; /* Сброс правого отступа */
+                transform: translateX(-50%); /* Выравнивание по центру */
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <button class="theme-toggle dark">Переключить на светлую тему</button>
+
+    <div class="audio-player-container">
+        <div class="audio-title">Озвучка страницы</div>
+        <div class="time-display" id="time-display">00:00 / 00:00</div>
+        <div class="audio-player">
+            <audio id="audio-player" src=""></audio>
+            <div class="controls">
+                <button class="play-pause" id="play-pause"><i class="fas fa-play"></i></button>
+                <div class="seek-bar-container">
+                    <input type="range" id="seek-bar" class="seek-bar" value="0" max="100">
+                </div>
+            </div>
+            <div class="volume-container">
+                <button class="volume-icon" id="volume-icon"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volume-bar" value="50" max="100" class="volume-bar">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>V2.0 Storms Brewing: Статус обновления</h1>
+        <p>Привет, Выжившие!</p>
+      
+        <p>Мы усердно работаем над обновлением Storm’s Brewing (Грядут бури) V2.0 и хотим поделиться его текущим статусом. Хотя разработка заняла значительно больше времени, чем мы ожидали, этот билд наполнен потрясающим новым контентом, новыми испытаниями, изменениями в системе прогрессии, оптимизациями и многим другим. Мы планируем выпустить экспериментальную версию в Steam 15 апреля, а стабильную версию на всех платформах — в начале мая, если всё пойдёт по плану.</p>
+      
+        <p>Примечание: приведённый ниже список не является полным — в нём отсутствуют многие детали, а также несколько функций, над которыми мы работаем, но которые могут не попасть в финальный релиз. Более полная информация появится ближе к запуску.</p>
+      
+        <p>Тем, кто интересуется нашей новой игрой 7 Days Blood Moons, стоит знать, что издаётся она TFP, а разрабатывается Illogika Studios, и это никак не повлияло на разработку обновлений для 7 Days to Die. Подавляющее большинство команды TFP работает исключительно над 7 Days to Die, и только небольшая часть сотрудников помогает с другими проектами.</p>
+      
+        <h2>Статус обновления V2.0</h2>
+      
+        <h3>Биомы, прогрессия и выживание в экстремальных условиях</h3>
+        <p>Готовьтесь столкнуться с суровыми природными условиями как никогда раньше! Осваивайте опасные биомы небольшими шагами, получайте постоянные улучшения для выживания в самых жестоких условиях и создавайте временные баффы, чтобы расширять свои границы. Это новое определение выживания!</p>
+        <ul>
+          <li>Проходите через биомы с нарастающей сложностью и угрозами</li>
+          <li>Новые механики: дым, жара, холод, радиационное повреждение, способы защиты и выживания</li>
+          <li>Крафт расходников для временного повышения устойчивости к элементам биома</li>
+          <li>Выполняйте испытания, чтобы навсегда повысить свою устойчивость к опасностям биомов</li>
+          <li>Прогрессивные уровни добычи в биомах стимулируют исследования</li>
+          <li>Настройки игры позволяют кастомизировать игровой процесс под себя</li>
+          <li>Новый HUD, эффекты на персонаже (VFX) и звуковые эффекты (SFX)</li>
+          <li>В 2.0 появятся новые зомби-боссы биомов, включая плевальщика чумы в пустыне</li>
+        </ul>
+      
+        <h3>Обновление и ребаланс перков</h3>
+        <p>Мы добавили новую вкладку "Общие перки", которая открывает ещё больше возможностей для настройки персонажа. А ещё мы заполнили пустые слоты в списках атрибутов новыми интересными перками!</p>
+        <ul>
+          <li>У каждого атрибута теперь 10 перков (включая новые и улучшенные)</li>
+          <li>Каждый перк имеет 5 уровней</li>
+          <li>Новые мастер-перки для каждого атрибута</li>
+          <li>Часть перков перенесена в новую вкладку "Общие перки", они больше не требуют вложения очков в атрибуты</li>
+        </ul>
+      
+        <h3>Сага о кувалдах</h3>
+        <p>Мы добавили новую серию книг для оружейного класса кувалд!</p>
+      
+        <h3>Новые зомби с высоким уровнем сложности</h3>
+        <p>Приготовьтесь к новому уровню хаоса! Помимо знакомых зелёных радиационных зомби, теперь в игре появятся заряженные синие и инфернальные оранжевые зомби с уникальными поведенческими особенностями. Они сделают поздние этапы игры ещё более напряжёнными!</p>
+      
+        <h3>Обновление деревьев и растительности</h3>
+        <ul>
+          <li>Большинство деревьев оптимизировано, теперь они используют единый шейдер SpeedTree для повышения производительности</li>
+          <li>Переработаны деревья в сгоревших зонах и пустошах — теперь они выглядят намного лучше</li>
+          <li>Введена система под-биомов, позволяющая создавать поляны и густые леса с низкорослыми растениями по краям без потерь производительности</li>
+        </ul>
+      
+        <h3>Выползающие зомби</h3>
+        <ul>
+          <li>Теперь зомби могут появляться в узких пространствах (1 метр) и проползать в труднодоступные места</li>
+          <li>Улучшены инструменты спавна и респавна врагов</li>
+          <li>Переработаны крупные POI, чтобы сохранить сложность, но улучшить производительность</li>
+        </ul>
+      
+        <h3>Обновление Навезгена (Navezgane)</h3>
+        <p>Навезген обновлён с учётом новой системы элементального выживания. Границы биомов и расположение торговцев обновлены для улучшения логистики между основными POI.</p>
+      
+        <h3>Новые POI: мир расширяется!</h3>
+        <p>Мы планируем добавить 50 новых точек интереса (POI), чтобы сделать мир ещё более глубоким и разнообразным!</p>
+        <ul>
+          <li>Больше POI в дикой местности</li>
+          <li>Новые заброшенные здания (для повышения производительности)</li>
+          <li>Некоторые требовательные POI оптимизированы — теперь зомби используют механику выползания для неожиданных атак!</li>
+        </ul>
+      
+        <h3>Аудио</h3>
+        <ul>
+          <li>Улучшены звуки шагов для повышения реалистичности и погружения</li>
+          <li>Добавлены новые звуки зомби для разных биомов</li>
+        </ul>
+      
+        <h3>Косметика одежды, Twitch Drops и DLC</h3>
+        <ul>
+          <li>Выбирайте защитную одежду, но меняйте внешний вид персонажа с помощью новых нарядов</li>
+          <li>В 2.0 появятся новые косметические DLC и Twitch Drops — покажите свой стиль!</li>
+        </ul>
+      
+        <h3>Улучшение процедурной генерации</h3>
+        <ul>
+          <li>Расширено появление POI в дикой местности</li>
+          <li>Дороги в дикой местности теперь генерируются лучше</li>
+        </ul>
+      
+        <h3>Новая система маркеров квестов</h3>
+        <p>Теперь у каждого квеста свой тип флага, который отображается на карте.</p>
+      
+        <h3>Спавн рядом с другом</h3>
+        <p>
+          Начинаете новую игру? Теперь можно выбрать друга, рядом с которым появится ваш персонаж!<br>
+          Добавлена удобная кнопка возврата в главное меню перед присоединением к игре.
+        </p>
+      
+        <h3>Кроссплей на выделенных серверах</h3>
+        <p>Мы не можем подтвердить возможность игры на выделенных серверах с консолей, пока каждая платформа не пройдёт сертификацию. Надеемся на лучшее!</p>
+      </div>      
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = 'Переключить на светлую тему';
+                themeToggle.classList.add('dark');
+            } else {
+                themeToggle.textContent = 'Переключить на темную тему';
+                themeToggle.classList.remove('dark');
+            }
+        });
+        
+        // Audio player controls
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeIconBtn = document.getElementById('volume-icon');
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+        const volumeUpIcon = '<i class="fas fa-volume-up"></i>';
+        const volumeMuteIcon = '<i class="fas fa-volume-mute"></i>';
+
+        let isMuted = false;
+        let previousVolume = 0.50; // Начальная громкость 50%
+
+        // Устанавливаем начальную громкость на 50%
+        audio.volume = previousVolume;
+        volumeBar.value = previousVolume * 100;
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        // Смена иконки на play при завершении аудио
+        audio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = playIcon;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (100 / audio.duration) * audio.currentTime;
+            seekBar.value = value;
+
+            const currentMinutes = Math.floor(audio.currentTime / 60);
+            const currentSeconds = Math.floor(audio.currentTime - currentMinutes * 60);
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+
+            const formatTime = (minutes, seconds) => {
+                return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+            if (audio.volume === 0) {
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            } else {
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            }
+        });
+
+        volumeIconBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = previousVolume;
+                volumeBar.value = previousVolume * 100;
+                volumeIconBtn.innerHTML = volumeUpIcon;
+            } else {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeBar.value = 0;
+                volumeIconBtn.innerHTML = volumeMuteIcon;
+            }
+            isMuted = !isMuted;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            const durationMinutes = Math.floor(audio.duration / 60);
+            const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+        });
+
+        function formatTime(minutes, seconds) {
+            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Показать длительность при загрузке страницы
+        window.addEventListener('load', () => {
+            if (audio.readyState >= 1) {
+                const durationMinutes = Math.floor(audio.duration / 60);
+                const durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+                timeDisplay.textContent = `00:00 / ${formatTime(durationMinutes, durationSeconds)}`;
+            }
+        });
+    </script>
+</body>
+</html>
