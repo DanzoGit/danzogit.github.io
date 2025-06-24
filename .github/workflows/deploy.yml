@@ -20,7 +20,4 @@ jobs:
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
           SURGE_DOMAIN: ${{ secrets.SURGE_DOMAIN }}
-        run: |
-          surge \
-            --domain "$SURGE_DOMAIN" \
-            --token "$SURGE_TOKEN"
+        run: surge . --domain "$SURGE_DOMAIN" --token "$SURGE_TOKEN"
