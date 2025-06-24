@@ -13,22 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
       - name: Install Surge CLI
         run: npm install --global surge
-
-      - name: Build project
-        run: npm run build
 
       - name: Deploy to Surge
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
           SURGE_DOMAIN: ${{ secrets.SURGE_DOMAIN }}
         run: surge \
-          --project ./build \
+          --project . \
           --domain "$SURGE_DOMAIN" \
           --token "$SURGE_TOKEN"
