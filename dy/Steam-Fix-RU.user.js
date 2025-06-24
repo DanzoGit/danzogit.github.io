@@ -3,8 +3,8 @@
 // @namespace    Steam Fix RU
 // @version      1.1
 // @author		Danzo
-// @updateURL	https://danzogit.github.io/dy/Steam-Fix-RU.user.js
-// @downloadURL    https://danzogit.github.io/dy/Steam-Fix-RU.user.js
+// @updateURL	https://danzo.surge.sh/dy/Steam-Fix-RU.user.js
+// @downloadURL    https://danzo.surge.sh/dy/Steam-Fix-RU.user.js
 // @description  Убирает параметр `l=russian` из URL для CSS и JS
 // @match        *://store.steampowered.com/*
 // @grant        none
