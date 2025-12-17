@@ -1,6 +1,9 @@
 {
-  "redirects": [
-    { "source": "/DownGit/:path*", "destination": "https://downgitm.vercel.app/:path*", "permanent": false },
-    { "source": "/DownGit", "destination": "https://downgitm.vercel.app/", "permanent": false }
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/DownGit/:match*",
+      "destination": "https://downgitm.vercel.app/:match*"
+    }
   ]
 }
