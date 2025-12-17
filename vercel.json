@@ -1,12 +1,6 @@
 {
-  "rewrites": [
-    {
-      "source": "/DownGit/:path*",
-      "destination": "https://downgitm.vercel.app/:path*"
-    },
-    {
-      "source": "/DownGit",
-      "destination": "https://downgitm.vercel.app/"
-    }
+  "redirects": [
+    { "source": "/DownGit/:path*", "destination": "https://downgitm.vercel.app/:path*", "permanent": false },
+    { "source": "/DownGit", "destination": "https://downgitm.vercel.app/", "permanent": false }
   ]
 }
