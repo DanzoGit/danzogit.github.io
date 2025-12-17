@@ -32,7 +32,8 @@ homeModule.config([
 
                     var templateUrl = "https?://github.com/.+/.+";
                     var downloadUrlInfix = "#/home?url=";
-                    var downloadUrlPrefix = "https://danzogit.github.io/DownGit/"+downloadUrlInfix;
+                    var currentBaseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname.replace(/index\.html$|\/$/, "");
+                    var downloadUrlPrefix = currentBaseUrl + "/" + downloadUrlInfix;
 
                     if ($routeParams.url) {
                         $scope.url = $routeParams.url;
