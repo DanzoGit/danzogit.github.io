@@ -2,15 +2,15 @@
   "rewrites": [
     {
       "source": "/DownGit",
-      "destination": "https://downgit-yourname.vercel.app"
+      "destination": "https://downgitm.vercel.app"
     },
     {
       "source": "/DownGit/",
-      "destination": "https://downgit-yourname.vercel.app/"
+      "destination": "https://downgitm.vercel.app/"
     },
     {
       "source": "/DownGit/:path*",
-      "destination": "https://downgit-yourname.vercel.app/:path*"
+      "destination": "https://downgitm.vercel.app/:path*"
     }
   ]
 }
