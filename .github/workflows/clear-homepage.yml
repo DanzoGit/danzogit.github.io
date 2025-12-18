@@ -1,0 +1,18 @@
+name: Clear repo homepage
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  clear-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear repository homepage field
+        run: |
+          curl -s -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.CLEAR_PAT }}" \
+            https://api.github.com/repos/${{ github.repository }} \
+            -d '{"homepage": ""}'
