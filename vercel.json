@@ -1,8 +1,7 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/DownGit/:path*",
+      "source": "/DownGit/",
       "destination": "https://downgitm.vercel.app/"
     },
 	{
