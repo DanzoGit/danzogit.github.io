@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/DownGit",
+      "destination": "/DownGit/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/DownGit",
