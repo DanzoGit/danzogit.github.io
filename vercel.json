@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/DownGit",
-      "destination": "https://downgitm.vercel.app"
+      "destination": "https://downgitm.vercel.app/"
     },
     {
       "source": "/DownGit/",
