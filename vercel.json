@@ -1,12 +1,6 @@
 {
   "rewrites": [
-    {
-      "source": "/DownGit/",
-      "destination": "https://downgitm.vercel.app/"
-    },
-	{
-      "source": "/DownGit",
-      "destination": "https://downgitm.vercel.app/"
-    }
+    { "source": "/DownGit/:path*", "destination": "/api/downgit/:path*" },
+    { "source": "/DownGit", "destination": "/api/downgit" }
   ]
 }
