@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/DownGit/:path*", "destination": "https://downgitm.vercel.app/:path*" }
+  ]
+}
