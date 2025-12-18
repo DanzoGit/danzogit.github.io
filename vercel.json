@@ -2,12 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/DownGit/",
-      "destination": "https://downgitm.vercel.app/#/home"
+      "source": "/DownGit/:path*",
+      "destination": "https://downgitm.vercel.app/"
     },
 	{
       "source": "/DownGit",
-      "destination": "https://downgitm.vercel.app/#/home"
+      "destination": "https://downgitm.vercel.app/"
     }
   ]
 }
