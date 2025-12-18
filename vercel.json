@@ -1,6 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/DownGit/:path*", "destination": "/api/downgit/:path*" },
-    { "source": "/DownGit", "destination": "/api/downgit" }
-  ]
-}
