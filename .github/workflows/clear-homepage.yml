@@ -1,15 +1,14 @@
-name: Clear repo homepage
+name: Clear repo homepage after Vercel deploy
 
 on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
+  repository_dispatch:
+    types: ['vercel.deployment.success']
 
 jobs:
   clear-homepage:
     runs-on: ubuntu-latest
     steps:
-      - name: Clear repository homepage field
+      - name: Clear repository homepage
         run: |
           curl -s -X PATCH \
             -H "Accept: application/vnd.github+json" \
