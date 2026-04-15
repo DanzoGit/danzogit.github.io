@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danzo Screamer Alert</title>
+    <style>
+        body {
+            background-color: #2b2a2a;
+            color: #eeeeee;
+            font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        a {
+            color: #e88f4f;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .size-3 { font-size: 16px; }
+        .size-4 { font-size: 18px; }
+        .size-5 { font-size: 24px; }
+        
+        .color-green { color: #39D611; }
+        .color-orange { color: #f6b26b; }
+        
+        .youtube-container {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <strong><span class="size-4 color-green"><strong>Works with version 2.0 and above, and with versions 1.0–1.4.</strong></span></strong><br><br>
+
+    <strong><span class="color-green">For game versions 1.0–1.4, requires mod version 1.3.2 or earlier.</span></strong><br><br>
+
+    <strong>
+    <div class="youtube-container">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/ieaWJX1KnDE?autoplay=0" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <span class="color-orange"><span class="size-4">The mod plays sound alerts:</span><br><br>
+
+    <span class="size-4">1) When a screamer spawns.</span><br>
+    <span class="size-4">2) When a screamer spawns a horde of zombies.</span><br>
+    <span class="size-4">3) When a wandering horde spawns.</span><br><br>
+
+    <u><span class="size-4">There are 57 sounds to choose from.</span></u><br>
+    <span class="size-4">You can listen to them and select the appropriate one.</span><br>
+    <span class="size-4">They are located in the </span><strong><span class="size-4 color-orange"><strong><span class="size-4 color-orange"><strong><span class="size-4 color-green">Sounds</span></strong></span></strong></span></strong><span class="size-4"> folder.</span><br>
+    <span class="size-4">All sounds are listed in the </span><strong><span class="size-4 color-orange"><strong><span class="size-4 color-green">sounds.txt</span></strong></span></strong><span class="size-4">&nbsp;file.</span><br><br>
+
+    <strong><span class="size-4 color-green">The configuration is contained in the config.json file.</span></strong><br><br>
+
+    <span class="size-4">Sound volume:</span><br>
+    <span class="size-4">Values range from 0 to 1. If the value is 0, the sound will not be played.</span><br>
+    <span class="size-4">SpawnScoutsVolume - screamer spawn.</span><br>
+    <span class="size-4">SpawnHordeNearVolume - screamer spawns a horde of zombies.</span><br>
+    <span class="size-4">WanderingHordeVolume - wandering horde spawn.</span><br><br>
+
+    <span class="size-4">Types of alerts:</span><br>
+    <span class="size-4">You can replace the sounds with any listed in sounds.txt.</span><br>
+    <span class="size-4">SpawnScoutsSound - screamer spawn.</span><br>
+    <span class="size-4">SpawnHordeNearSound - screamer spawns a horde of zombies.</span><br>
+    <span class="size-4">WanderingHordeSound - wandering horde spawn.</span><br><br>
+
+    <span class="size-4">For each alert type, you can set <span class="color-green">any number of sounds</span> to be played in order.</span><br>
+    <span class="size-4">An empty value of type <span class="color-green">""</span> is ignored.</span><br>
+    <span class="size-4">If you set <span class="color-green">RandomizeSounds</span> to <span class="color-green">true</span>, the mod will try to randomize the sounds of alerts (repetitions are possible).<br><br>
+
+    Alert sounds can be made to play within a certain radius on the map:<br>
+    Several parameters in the configuration are responsible for this behavior.<br><br>
+
+    <span class="color-orange"><span class="size-4"><span class="color-green">SoundAttachedToPosition</span></span></span>: the default value for it is <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">auto</span></span></span></span></span>&nbsp;- in a single-player game, the sound will spread across the entire map, in multiplayer - only at the spawn location of the screamer, the wandering horde, and the zombie spawn point from the screamer.<br>
+    If set to <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">disabled</span></span></span></span></span></span></span>, the sound will always spread across the entire map, regardless of the number of players.<br>
+    If set to <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">enabled</span></span></span></span></span></span></span></span></span>, the sound will always be attached to the position.<br><br>
+
+    <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">SoundRadius</span></span></span></span></span>: the default value is <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">120</span></span></span></span></span></span></span>. This is the radius within which the alert sound will spread.<br>
+    Keep in mind that a screamer spawns at a distance of <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">80</span></span></span></span></span></span></span>&nbsp;meters from the player, and a wandering horde -&nbsp;<span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">92</span></span></span></span></span></span></span> meters.<br>
+    If you set the radius too small, you won't hear the sound at all.<br>
+    The optimal value is <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">100-120</span></span></span></span></span></span></span>.<br><br>
+
+    <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">DebugRadius</span></span></span></span></span></span></span>: when toggled to <span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-orange"><span class="size-4"><span class="color-green">true</span></span></span></span></span></span></span></span></span>, it displays a large red sphere that visualizes the sound radius. Inside this sphere is another small yellow sphere that indicates the center of the large sphere.<br><br>
+
+    When playing a sound within a certain radius, the player's elevation (height) is not taken into account. This is done intentionally, because if the player is too low (for example, in a mine) or too high (on the roof of a skyscraper or on a flying vehicle), the player would not hear the alert sound.<br>
+    Also, the player's movement during the playback of the alert sound is not taken into account. That is, the sound will not be interrupted if the player goes outside the sound radius. This is also done intentionally.<br><br>
+
+    P.S. Initially, I wanted to implement spatial sound, but during testing, I had to abandon it. If the player moves, the sound doesn't behave very well, and additionally, the volume can be too weak to hear the alert.</span><br><br>
+
+    <span class="size-4">There is an option to add a custom asset bundle.</span><br>
+    <span class="size-4">It needs to be placed in the </span><strong><span class="size-4 color-orange"><strong><span class="size-4 color-green">Resources</span></strong></span></strong><span class="size-4">&nbsp;folder.</span><br>
+    <span class="size-4">The default name for it is </span><strong><span class="size-4 color-green">CustomAlertSounds.unity3d</span></strong><span class="size-4">.</span><br>
+    <span class="size-4">This can be changed in the config file.</span><br>
+    <span class="size-4">You can also enable its loading there.</span><br><br>
+
+    <span class="size-3">For creating the asset bundle, I used:</span><br>
+    <a href="https://unity.com/download">Unity</a> (Editor version: 2022.3.38f1)<br>
+    <a href="https://github.com/OCB7D2D/UnityAssetExporter">Unity3D Resource Bundle Multi-Asset Exporter<br>
+    <strong><span class="color-orange"><span class="size-3">The camera and sound source are not needed yet; these settings are handled in the mod's code.</span></span></strong><br>
+    </a><br>
+
+    <span class="size-4">﻿Server settings:<br>
+    The parameter <strong><span class="color-orange"><strong><span class="color-green">UseServerConfig</span></strong></span></strong>&nbsp;in the config is responsible for this. By default, it is set to <strong><span class="color-orange"><strong><span class="color-orange"><strong><span class="color-green">false</span></strong></span></strong></span></strong>&nbsp;(disabled).<br>
+    Switching it to <strong><span class="color-orange"><strong><span class="color-orange"><strong><span class="color-orange"><strong><span class="color-green">true</span></strong></span></strong></span></strong></span></strong>&nbsp;will force clients to use the server's settings.<br>
+    For custom alerts to work for clients, they need to download the sound pack and place it in the appropriate folder.<br>
+    No config changes are required on the client side.<br>
+    If the custom pack is not found in the <strong><span class="color-orange"><strong><span class="color-orange"><strong><span class="color-orange"><strong><span class="color-orange"><strong><span class="color-green">Resources</span></strong></span></strong></span></strong></span></strong></span></strong>&nbsp;folder, the default sounds will be used, but the server's volume settings will be applied.<br>
+    When clients disconnect from the server, their settings specified in their config will be restored.<br>
+    Changing the&nbsp;<strong><span class="color-orange"><strong><span class="color-orange"><strong><span class="color-green">UseServerConfig</span></strong></span></strong></span></strong> parameter does not affect the client side.</span></span></strong><br><br>
+
+    <strong><span class="color-green"><span class="size-5">Alerts should work in multiplayer.</span><br>
+    <span class="size-5">The mod needs to be installed for both clients and the server.</span><br>
+    <span class="size-4">The mod is incompatible with earlier or later versions of the mod.<br>
+    The same version must be installed on both clients and the server.</span><br>
+    <span class="size-3">Alert settings and their volume can be individually configured for each client (unless the server enforces the use of server settings).</span><br>
+    <span class="size-3">I only tested it on a dedicated server where I was the only player.</span></span></strong><br><br>
+
+    <strong><span class="size-4 color-green">For the mod to function, the 0_TFP_Harmony folder is required in the Mods folder.<br>
+    Requires disabling EAC.</span></strong>
+
+</body>
+</html>
