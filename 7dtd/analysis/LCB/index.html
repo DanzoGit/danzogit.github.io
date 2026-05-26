@@ -4,11 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Технический анализ 7 Days to Die 2.6 (b14)</title>
+<link rel="icon" type="image/png" href="favicon.png" />
 
 <!-- Markdown parser -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <!-- Syntax highlighting -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark-dimmed.min.css">
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/csharp.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/xml.min.js"></script>
@@ -124,7 +125,7 @@
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 16px 18px;
+    padding: 40px 18px 16px;   /* верхний паддинг для плашки языка и кнопки */
     overflow-x: auto;
     margin: 18px 0;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
@@ -137,26 +138,62 @@
     font-size: 13.5px;
     line-height: 1.55;
   }
+  /* Плашка языка — слева сверху */
   pre::before{
     content: attr(data-lang);
-    position: absolute; top: 8px; right: 56px;
-    font-size: 11px; color: var(--text-dim);
+    position: absolute; top: 0; left: 0;
+    font-size: 11px; font-weight: 600;
+    color: var(--accent-2);
+    background: rgba(121,192,255,.08);
+    padding: 4px 12px;
+    border-radius: var(--radius) 0 6px 0;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
     text-transform: uppercase; letter-spacing: .08em;
+    pointer-events: none;
   }
+  pre:not([data-lang])::before{ display: none }
+  /* Кнопка копирования — справа сверху */
   .copy-btn{
-    position: absolute; top: 8px; right: 10px;
+    position: absolute; top: 6px; right: 8px;
     background: rgba(255,255,255,.04);
     color: var(--text-dim);
     border: 1px solid var(--border);
     border-radius: 6px;
     font-size: 11px;
-    padding: 4px 8px;
+    padding: 4px 10px;
     cursor: pointer;
     transition: all .15s ease;
     font-family: inherit;
+    z-index: 2;
   }
   .copy-btn:hover{ color: var(--text); background: rgba(255,255,255,.08) }
   .copy-btn.copied{ color: var(--accent); border-color: var(--accent) }
+
+  /* Дополнительная подсветка для слабо подсвеченных токенов hljs */
+  .hljs                 { color: #d1d5db; background: transparent }
+  .hljs-keyword,
+  .hljs-built_in,
+  .hljs-literal         { color: #ff7b72; font-weight: 600 }   /* if, foreach, return, true, false, null */
+  .hljs-type,
+  .hljs-class .hljs-title,
+  .hljs-title.class_    { color: #ffa657 }                      /* int, bool, ClassName */
+  .hljs-title.function_,
+  .hljs-function .hljs-title,
+  .hljs-title           { color: #d2a8ff; font-weight: 600 }   /* имена методов */
+  .hljs-string          { color: #a5d6ff }                      /* строки */
+  .hljs-number          { color: #79c0ff }                      /* числа */
+  .hljs-comment         { color: #8b949e; font-style: italic }  /* комментарии */
+  .hljs-variable,
+  .hljs-attr,
+  .hljs-property        { color: #79c0ff }
+  .hljs-params          { color: #e6edf3 }
+  .hljs-meta            { color: #7ee787 }
+  .hljs-tag             { color: #7ee787 }
+  .hljs-name            { color: #7ee787 }
+  .hljs-attribute       { color: #79c0ff }
+  .hljs-operator,
+  .hljs-punctuation     { color: #c9d1d9 }
 
   /* Blockquote */
   blockquote{
@@ -244,7 +281,14 @@
 
 <script>
   // ----- Настройки -----
-  const MD_FILE = 'analysis.md'; // имя Markdown-файла рядом с index.html
+  const MD_FILE = 'analysis.md';      // имя Markdown-файла рядом с index.html
+  const SCROLL_OFFSET = 120;          // на сколько пикселей ниже верха срабатывает активный пункт
+
+  // ----- highlight.js: алиасы -----
+  // marked отдаёт class="language-c#", hljs такой язык не знает — мапим в csharp
+  hljs.registerAliases(['c#', 'cs'], { languageName: 'csharp' });
+  hljs.registerAliases(['html'],     { languageName: 'xml' });
+  hljs.registerAliases(['sh', 'shell'], { languageName: 'bash' });
 
   // ----- Marked: рендерер -----
   marked.setOptions({
@@ -281,13 +325,23 @@
     document.getElementById('status').style.display = 'none';
     article.style.display = 'block';
 
-    // Подсветка кода + кнопки «копировать» + метка языка
+    // --- Код-блоки: язык, подсветка, кнопка копирования ---
     article.querySelectorAll('pre > code').forEach(code => {
       const pre = code.parentElement;
-      // язык
+
+      // определить язык из class="language-xxx"
       const langClass = [...code.classList].find(c => c.startsWith('language-'));
-      const lang = langClass ? langClass.replace('language-','') : '';
-      if(lang) pre.setAttribute('data-lang', lang);
+      let lang = langClass ? langClass.replace('language-','') : '';
+
+      // нормализация алиасов для отображения и для hljs
+      const aliasMap = { 'c#': 'csharp', 'cs': 'csharp', 'sh': 'bash', 'shell': 'bash' };
+      const normalized = aliasMap[lang.toLowerCase()] || lang;
+      if (normalized && normalized !== lang) {
+        code.classList.remove('language-' + lang);
+        code.classList.add('language-' + normalized);
+        lang = normalized;
+      }
+      if (lang) pre.setAttribute('data-lang', lang);
 
       // подсветка
       try { hljs.highlightElement(code); } catch(e){}
@@ -295,6 +349,7 @@
       // кнопка копирования
       const btn = document.createElement('button');
       btn.className = 'copy-btn';
+      btn.type = 'button';
       btn.textContent = 'Копировать';
       btn.addEventListener('click', () => {
         navigator.clipboard.writeText(code.innerText).then(() => {
@@ -306,44 +361,99 @@
       pre.appendChild(btn);
     });
 
-    // Оглавление по H2 / H3
+    // --- Оглавление по H2 / H3 ---
     const tocList = document.getElementById('toc-list');
     tocList.innerHTML = '';
-    const headings = article.querySelectorAll('h2, h3');
+    const headings = [...article.querySelectorAll('h2, h3')];
+    const usedIds = new Set();
     headings.forEach(h => {
-      if(!h.id) h.id = slugify(h.textContent);
+      let base = h.id || slugify(h.textContent) || 'section';
+      let id = base, i = 2;
+      while (usedIds.has(id)) id = base + '-' + (i++);
+      usedIds.add(id);
+      h.id = id;
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.href = '#' + h.id;
       a.textContent = h.textContent;
       a.className = h.tagName === 'H3' ? 'lvl-3' : 'lvl-2';
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        document.getElementById(h.id).scrollIntoView({behavior:'smooth', block:'start'});
-        history.replaceState(null, '', '#' + h.id);
-      });
+      a.dataset.target = h.id;
       li.appendChild(a);
       tocList.appendChild(li);
     });
 
-    // Подсветка активного пункта оглавления при скролле
     const links = [...tocList.querySelectorAll('a')];
-    const map = new Map(links.map(l => [l.getAttribute('href').slice(1), l]));
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(en => {
-        if(en.isIntersecting){
-          links.forEach(l => l.classList.remove('active'));
-          const link = map.get(en.target.id);
-          if(link) link.classList.add('active');
-        }
-      });
-    }, { rootMargin: '-20% 0px -70% 0px' });
-    headings.forEach(h => obs.observe(h));
+    const linkById = new Map(links.map(l => [l.dataset.target, l]));
 
-    // Если в URL есть якорь — прокрутить
-    if(location.hash){
-      const el = document.getElementById(location.hash.slice(1));
-      if(el) el.scrollIntoView();
+    // --- Скроллспай: ищем последний заголовок, прошедший верхнюю границу ---
+    let suppressUntil = 0;            // блокирует автообновление сразу после клика
+    let currentActive = null;
+
+    function setActive(id, scrollTocIntoView = false){
+      if (currentActive === id) return;
+      currentActive = id;
+      links.forEach(l => l.classList.remove('active'));
+      const link = linkById.get(id);
+      if (link) {
+        link.classList.add('active');
+        if (scrollTocIntoView) {
+          link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      }
+    }
+
+    function updateActive(){
+      if (performance.now() < suppressUntil) return;
+      const scrollPos = window.scrollY + SCROLL_OFFSET;
+      let activeId = headings[0]?.id ?? null;
+      for (const h of headings) {
+        const top = h.getBoundingClientRect().top + window.scrollY;
+        if (top <= scrollPos) activeId = h.id;
+        else break;
+      }
+      // если скролл в самом низу — подсветим последний заголовок
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        activeId = headings[headings.length - 1]?.id ?? activeId;
+      }
+      if (activeId) setActive(activeId);
+    }
+
+    // обработчик клика: моментально подсвечиваем, ставим хеш, плавно скроллим, блокируем автообновление до окончания анимации
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const id = link.dataset.target;
+        const target = document.getElementById(id);
+        if (!target) return;
+        suppressUntil = performance.now() + 900; // длительность плавной прокрутки
+        setActive(id);
+        const top = target.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET + 1;
+        window.scrollTo({ top, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + id);
+      });
+    });
+
+    // на скролле — с rAF для производительности и точности на быстром скролле
+    let ticking = false;
+    function onScroll(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateActive(); ticking = false; });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    // первичная подсветка
+    updateActive();
+
+    // если в URL есть якорь — прокрутить и подсветить
+    if (location.hash) {
+      const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET + 1;
+        window.scrollTo({ top, behavior: 'auto' });
+        setActive(el.id);
+      }
     }
   }
 
