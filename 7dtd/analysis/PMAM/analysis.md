@@ -139,7 +139,71 @@ _strength -= num3;
 
 ---
 
-## 5. Блок-вывод для обычного игрока
+## 5. Детальный разбор: почему обнулённый удар не спасает от инфекции (ванильная цепочка)
+
+Главный практический вопрос: «если перк поглотил удар и урон = 0, накладывается ли инфекция?» Ответ строго по коду: **да, накладывается (ванильно — по шансу, в моде — гарантированно)**. Косвенной защиты «0 урона → нет инфекции» нет. Доказательство — полная цепочка.
+
+### 5.1 Как ванильная инфекция вешается на удар
+
+Инфекция привязана к **событию атаки**, а не к величине прошедшего урона:
+
+1. **Оружие зомби** `meleeHandZombie01` (`items.xml`, стр. 6503–6505):
+```xml
+<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" fireOneBuff="true"
+    buff="buffFatiguedTrigger,buffArmSprainedCHTrigger,buffLegSprainedCHTrigger,buffLaceration,buffAbrasionCatch,buffInjuryStunned01CHTrigger,buffInjuryBleedingTwo"
+    weights=".11,.07,.07,.05,.29,.36,.11"/>
+```
+На событии `onSelfAttackedOther` (зомби ударил игрока) `fireOneBuff` выдаёт игроку ОДИН crit-бафф по весам.
+
+2. Crit-баффы (`buffAbrasionCatch` стр. 3949–3952, и `buff*CHTrigger`) при старте дают `buffOnAnyCrit`:
+```xml
+<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOnAnyCrit"/>
+```
+
+3. `buffOnAnyCrit` (`buffs.xml`, стр. 3760–3766) и есть «генератор инфекции»:
+```xml
+<effect_group>
+    <requirement name="CVarCompare" cvar="noTeethNoInfection" operation="LT" value="1"/>
+    <requirement name="!HasBuff" buff="buffPreacherFullSetBonusCheck,buffInfectionImmunity"/>
+        <passive_effect name="BuffResistance" operation="base_add" value="-.1" tags="buffInfectionCatch"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInfectionCatch"/>
+</effect_group>
+```
+Единственный гейт здесь — `noTeethNoInfection` (перк «Громила») и иммунитет/сет Preacher. Pack Mule / Agility Mastery в условиях не участвуют.
+
+(Вторая строка оружия — `ModifyCVar infectionCounter +=10` с `requirement infectionCounter GT 0`, стр. 6514 — лишь усиливает уже существующую инфекцию, это не первичное заражение.)
+
+### 5.2 Обнулённый удар всё равно фаерит событие атаки
+
+- `EntityAlive.DamageEntity` (стр. 4525–4530, 4553): `GeneralDamageResist=1` обнуляет `_strength` → вызывает `damageEntityLocal(0)` → возвращает `dmResponse.ModStrength`. При нуле `ModStrength = 0` (стр. 4721), а **не `-1`**. Ранние `return -1` относятся к другим случаям (god-mode, friendly-fire, зомби-по-зомби — стр. 4497/4504/4509/4513), но НЕ к поглощённому урону.
+- `damageEntityLocal` (стр. 4581+) не имеет раннего выхода при `_strength==0`: `DamageResponse` создаётся со `Strength=0`, проходит метод до конца, где **безусловно** вызывается `FireAttackedEvents(_dmResponse)` (стр. 4749).
+- `FireAttackedEvents` (стр. 4754–4767) безусловно фаерит `onOtherAttackedSelf` на жертве (этот путь ловит инфекция **мода**).
+- `ItemActionAttack` (стр. 757–768): `num8 = DamageEntity(...)`; `if (num8 != -1)` → фаерит `onSelfAttackedOther` (стр. 766, 768). Так как `num8 = 0 ≠ -1`, событие **срабатывает** → оружие зомби накладывает crit-баффы → инфекция (ванильный путь).
+
+### 5.3 Единственное, что реально завязано на урон
+
+`ItemActionAttack` (стр. 769–771): событие `onSelfDamagedOther` фаерится **только** при `RecordedDamage.Strength > 0`:
+```csharp
+if ((bool)entityAlive2 && entityAlive2.RecordedDamage.Strength > 0)
+{
+    entityAlive.FireEvent(MinEventTypes.onSelfDamagedOther, flag3);
+}
+```
+То есть от величины урона зависит `onSelfDamagedOther` (и пороги стана/нокдауна/pain-hit внутри `damageEntityLocal`), но **инфекция к ним не привязана** — она на `onSelfAttackedOther` / `onOtherAttackedSelf`.
+
+### 5.4 Итог по инфекции
+
+| | Завязано на урон? | Срабатывает при 0 урона? |
+|---|---|---|
+| `onSelfAttackedOther` (ваниль: crit-баффы → инфекция) | нет | **да** |
+| `onOtherAttackedSelf` (мод: `buffDanzoInfectionApply`) | нет | **да** |
+| `onSelfDamagedOther` (эффекты «по нанесённому урону») | да (`Strength>0`) | нет |
+
+Вывод: обнуление урона перками **не меняет шанс инфекции** — ванильно поглощённый удар прокает инфекцию ровно с той же вероятностью, что и обычный; в моде `buffDanzoInfectionApply` вообще не проверяет урон (только тег врага и отсутствие витаминов). Реальный гейт инфекции в ванильной цепочке — `noTeethNoInfection` (перк «Громила»), а не Pack Mule / Agility Mastery.
+
+---
+
+## 6. Блок-вывод для обычного игрока
 
 ### Вывод
 
