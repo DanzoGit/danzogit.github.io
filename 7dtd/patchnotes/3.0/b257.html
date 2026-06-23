@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>7 Days to Die - Обновление 3.0 B257 EXP</title>
+<link rel="icon" type="image/png" href="/favicon.png" />
+
+<!-- Markdown parser -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- Syntax highlighting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark-dimmed.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/csharp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/xml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/bash.min.js"></script>
+
+<style>
+  :root{
+    --bg:           #0f1419;
+    --bg-elev:      #161b22;
+    --bg-code:      #1a1f27;
+    --border:       #2a313c;
+    --text:         #e6edf3;
+    --text-dim:     #9aa4b2;
+    --accent:       #7ee787;   /* мягкий зелёный */
+    --accent-2:     #79c0ff;   /* мягкий голубой */
+    --warn:         #ffa657;
+    --quote:        #d2a8ff;
+    --table-stripe: #131820;
+    --shadow:       0 8px 24px rgba(0,0,0,.35);
+    --radius:       10px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background: radial-gradient(1200px 600px at 20% -10%, #1a2230 0%, transparent 60%),
+                radial-gradient(800px 500px at 110% 10%, #14202a 0%, transparent 55%),
+                var(--bg);
+    color: var(--text);
+    font-family: "Inter", "Segoe UI", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .layout{
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* Sidebar TOC */
+  aside.toc{
+    position: sticky; top: 24px; align-self: start;
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 22px;
+    box-shadow: var(--shadow);
+  }
+  aside.toc h2{
+    font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--text-dim); margin: 0 0 12px;
+  }
+  aside.toc ul{ list-style:none; padding:0; margin:0 }
+  aside.toc li{ margin: 4px 0 }
+  aside.toc a{
+    display:block; padding: 6px 10px;
+    color: var(--text-dim); text-decoration: none;
+    border-left: 2px solid transparent; border-radius: 4px;
+    font-size: 14px; transition: all .15s ease;
+  }
+  aside.toc a:hover{ color: var(--text); background: rgba(255,255,255,.03) }
+  aside.toc a.lvl-3{ padding-left: 22px; font-size: 13px }
+  aside.toc a.active{
+    color: var(--accent); border-left-color: var(--accent);
+    background: rgba(126,231,135,.06);
+  }
+
+  /* Article */
+  main{
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 40px 56px;
+    box-shadow: var(--shadow);
+    min-width: 0;
+  }
+
+  h1, h2, h3, h4{ color: var(--text); line-height: 1.3; letter-spacing: -.01em }
+  h1{ font-size: 28px; margin: 0 0 18px; border-bottom: 1px solid var(--border); padding-bottom: 14px }
+  h2{ font-size: 22px; margin: 36px 0 12px; color: var(--accent) }
+  h3{ font-size: 18px; margin: 26px 0 10px; color: var(--accent-2) }
+  h4{ font-size: 16px; margin: 20px 0 8px; color: var(--warn) }
+
+  p{ margin: 10px 0 14px }
+  a{ color: var(--accent-2); text-decoration: none; border-bottom: 1px dashed rgba(121,192,255,.4) }
+  a:hover{ border-bottom-style: solid }
+
+  strong{ color: #fff }
+  em{ color: var(--quote) }
+
+  /* Inline code */
+  code{
+    font-family: "JetBrains Mono", "Fira Code", "SF Mono", Menlo, Consolas, monospace;
+    font-size: .9em;
+    background: var(--bg-code);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+
+  /* Code blocks */
+  pre{
+    position: relative;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 18px 16px;   /* верхний паддинг для плашки языка и кнопки */
+    overflow-x: auto;
+    margin: 18px 0;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+  }
+  pre code{
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: var(--text);
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  /* Плашка языка — слева сверху */
+  pre::before{
+    content: attr(data-lang);
+    position: absolute; top: 0; left: 0;
+    font-size: 11px; font-weight: 600;
+    color: var(--accent-2);
+    background: rgba(121,192,255,.08);
+    padding: 4px 12px;
+    border-radius: var(--radius) 0 6px 0;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase; letter-spacing: .08em;
+    pointer-events: none;
+  }
+  pre:not([data-lang])::before{ display: none }
+  /* Кнопка копирования — справа сверху */
+  .copy-btn{
+    position: absolute; top: 6px; right: 8px;
+    background: rgba(255,255,255,.04);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-family: inherit;
+    z-index: 2;
+  }
+  .copy-btn:hover{ color: var(--text); background: rgba(255,255,255,.08) }
+  .copy-btn.copied{ color: var(--accent); border-color: var(--accent) }
+
+  /* Дополнительная подсветка для слабо подсвеченных токенов hljs */
+  .hljs                 { color: #d1d5db; background: transparent }
+  .hljs-keyword,
+  .hljs-built_in,
+  .hljs-literal         { color: #ff7b72; font-weight: 600 }   /* if, foreach, return, true, false, null */
+  .hljs-type,
+  .hljs-class .hljs-title,
+  .hljs-title.class_    { color: #ffa657 }                      /* int, bool, ClassName */
+  .hljs-title.function_,
+  .hljs-function .hljs-title,
+  .hljs-title           { color: #d2a8ff; font-weight: 600 }   /* имена методов */
+  .hljs-string          { color: #a5d6ff }                      /* строки */
+  .hljs-number          { color: #79c0ff }                      /* числа */
+  .hljs-comment         { color: #8b949e; font-style: italic }  /* комментарии */
+  .hljs-variable,
+  .hljs-attr,
+  .hljs-property        { color: #79c0ff }
+  .hljs-params          { color: #e6edf3 }
+  .hljs-meta            { color: #7ee787 }
+  .hljs-tag             { color: #7ee787 }
+  .hljs-name            { color: #7ee787 }
+  .hljs-attribute       { color: #79c0ff }
+  .hljs-operator,
+  .hljs-punctuation     { color: #c9d1d9 }
+
+  /* Blockquote */
+  blockquote{
+    margin: 16px 0;
+    padding: 8px 16px;
+    border-left: 3px solid var(--quote);
+    background: rgba(210,168,255,.06);
+    color: var(--text-dim);
+    border-radius: 0 6px 6px 0;
+  }
+  blockquote p{ margin: 6px 0 }
+
+  /* Lists */
+  ul, ol{ padding-left: 24px }
+  li{ margin: 4px 0 }
+  li::marker{ color: var(--accent-2) }
+
+  /* Images */
+  main img{
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 16px 0;
+    border-radius: var(--radius);
+  }
+
+  /* HR */
+  hr{ border: 0; height: 1px; background: var(--border); margin: 32px 0 }
+
+  /* Tables */
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: 14px;
+  }
+  th, td{
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th{
+    background: #1f2630;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .06em;
+  }
+  tr:nth-child(even) td{ background: var(--table-stripe) }
+  tr:last-child td{ border-bottom: 0 }
+
+  /* Loading / error */
+  #status{
+    color: var(--text-dim);
+    font-style: italic;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  #status.error{ color: var(--warn); font-style: normal }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{ width: 10px; height: 10px }
+  ::-webkit-scrollbar-track{ background: transparent }
+  ::-webkit-scrollbar-thumb{ background: #2a313c; border-radius: 10px }
+  ::-webkit-scrollbar-thumb:hover{ background: #3a4452 }
+
+  /* Mobile */
+  @media (max-width: 900px){
+    .layout{ grid-template-columns: 1fr; padding: 16px }
+    aside.toc{ position: static; max-height: none }
+    main{ padding: 24px 20px 40px }
+    h1{ font-size: 24px }
+    h2{ font-size: 20px }
+  }
+</style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="toc">
+      <h2>Содержание</h2>
+      <ul id="toc-list"><li><span style="color:var(--text-dim);font-size:13px">Загрузка…</span></li></ul>
+    </aside>
+    <main>
+      <div id="status">Загрузка <code>b257.md</code>…</div>
+      <article id="article" style="display:none"></article>
+    </main>
+  </div>
+
+<script>
+  // ----- Настройки -----
+  const MD_FILE = 'b257.md';      // имя Markdown-файла рядом с index.html
+  const SCROLL_OFFSET = 120;          // на сколько пикселей ниже верха срабатывает активный пункт
+
+  // ----- highlight.js: алиасы -----
+  // marked отдаёт class="language-c#", hljs такой язык не знает — мапим в csharp
+  hljs.registerAliases(['c#', 'cs'], { languageName: 'csharp' });
+  hljs.registerAliases(['html'],     { languageName: 'xml' });
+  hljs.registerAliases(['sh', 'shell'], { languageName: 'bash' });
+
+  // ----- Marked: рендерер -----
+  marked.setOptions({
+    gfm: true,
+    breaks: false,
+    headerIds: true,
+    mangle: false,
+  });
+
+  function slugify(s){
+    return s.toLowerCase()
+      .replace(/[^\p{L}\p{N}\s-]/gu,'')
+      .trim()
+      .replace(/\s+/g,'-');
+  }
+
+  async function load(){
+    const status = document.getElementById('status');
+    try{
+      const res = await fetch(MD_FILE, { cache: 'no-cache' });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const md = await res.text();
+      render(md);
+    }catch(err){
+      status.classList.add('error');
+      status.innerHTML = '⚠️ Не удалось загрузить <code>' + MD_FILE + '</code>: ' + err.message +
+        '<br><br>Запустите страницу через локальный сервер (см. инструкцию).';
+    }
+  }
+
+  function render(md){
+    const article = document.getElementById('article');
+    article.innerHTML = marked.parse(md);
+    document.getElementById('status').style.display = 'none';
+    article.style.display = 'block';
+
+    // --- Код-блоки: язык, подсветка, кнопка копирования ---
+    article.querySelectorAll('pre > code').forEach(code => {
+      const pre = code.parentElement;
+
+      // определить язык из class="language-xxx"
+      const langClass = [...code.classList].find(c => c.startsWith('language-'));
+      let lang = langClass ? langClass.replace('language-','') : '';
+
+      // нормализация алиасов для отображения и для hljs
+      const aliasMap = { 'c#': 'csharp', 'cs': 'csharp', 'sh': 'bash', 'shell': 'bash' };
+      const normalized = aliasMap[lang.toLowerCase()] || lang;
+      if (normalized && normalized !== lang) {
+        code.classList.remove('language-' + lang);
+        code.classList.add('language-' + normalized);
+        lang = normalized;
+      }
+      if (lang) pre.setAttribute('data-lang', lang);
+
+      // подсветка
+      try { hljs.highlightElement(code); } catch(e){}
+
+      // кнопка копирования
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.type = 'button';
+      btn.textContent = 'Копировать';
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(code.innerText).then(() => {
+          btn.textContent = 'Скопировано';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Копировать'; btn.classList.remove('copied'); }, 1500);
+        });
+      });
+      pre.appendChild(btn);
+    });
+
+    // --- Оглавление по H2 / H3 ---
+    const tocList = document.getElementById('toc-list');
+    tocList.innerHTML = '';
+    const headings = [...article.querySelectorAll('h2, h3')];
+    const usedIds = new Set();
+    headings.forEach(h => {
+      let base = h.id || slugify(h.textContent) || 'section';
+      let id = base, i = 2;
+      while (usedIds.has(id)) id = base + '-' + (i++);
+      usedIds.add(id);
+      h.id = id;
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      a.className = h.tagName === 'H3' ? 'lvl-3' : 'lvl-2';
+      a.dataset.target = h.id;
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    const links = [...tocList.querySelectorAll('a')];
+    const linkById = new Map(links.map(l => [l.dataset.target, l]));
+
+    // --- Скроллспай: ищем последний заголовок, прошедший верхнюю границу ---
+    let suppressUntil = 0;            // блокирует автообновление сразу после клика
+    let currentActive = null;
+
+    function setActive(id, scrollTocIntoView = false){
+      if (currentActive === id) return;
+      currentActive = id;
+      links.forEach(l => l.classList.remove('active'));
+      const link = linkById.get(id);
+      if (link) {
+        link.classList.add('active');
+        if (scrollTocIntoView) {
+          link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      }
+    }
+
+    function updateActive(){
+      if (performance.now() < suppressUntil) return;
+      const scrollPos = window.scrollY + SCROLL_OFFSET;
+      let activeId = headings[0]?.id ?? null;
+      for (const h of headings) {
+        const top = h.getBoundingClientRect().top + window.scrollY;
+        if (top <= scrollPos) activeId = h.id;
+        else break;
+      }
+      // если скролл в самом низу — подсветим последний заголовок
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        activeId = headings[headings.length - 1]?.id ?? activeId;
+      }
+      if (activeId) setActive(activeId);
+    }
+
+    // обработчик клика: моментально подсвечиваем, ставим хеш, плавно скроллим, блокируем автообновление до окончания анимации
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const id = link.dataset.target;
+        const target = document.getElementById(id);
+        if (!target) return;
+        suppressUntil = performance.now() + 900; // длительность плавной прокрутки
+        setActive(id);
+        const top = target.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET + 1;
+        window.scrollTo({ top, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + id);
+      });
+    });
+
+    // на скролле — с rAF для производительности и точности на быстром скролле
+    let ticking = false;
+    function onScroll(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateActive(); ticking = false; });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    // первичная подсветка
+    updateActive();
+
+    // если в URL есть якорь — прокрутить и подсветить
+    if (location.hash) {
+      const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET + 1;
+        window.scrollTo({ top, behavior: 'auto' });
+        setActive(el.id);
+      }
+    }
+  }
+
+  load();
+</script>
+</body>
+</html>
