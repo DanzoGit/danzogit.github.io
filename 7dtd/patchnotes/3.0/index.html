@@ -17,7 +17,7 @@
 <meta property="og:description" content="7 Days to Die 3.0 Примечания к выпуску" />
 <meta property="og:image" content="https://danzogit.github.io/7dtd/patchnotes/3.0/3.0.png" />
 
-<meta name="color-scheme" content="dark light" />
+<meta name="color-scheme" content="dark" />
 <meta name="theme-color" content="#191c19" />
 <link rel="icon" type="image/png" href="/favicon.png" />
 
@@ -38,12 +38,12 @@
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/bash.min.js"></script>
 
 <script>
-  // Тема выбирается до отрисовки, иначе на светлой теме мигает темный фон
+  // Тема выбирается до отрисовки, иначе на светлой теме мигает темный фон.
+  // По умолчанию тема темная: светлая включается только вручную кнопкой
   (function () {
     var saved = null;
     try { saved = localStorage.getItem('md-theme'); } catch (e) {}
-    var light = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    document.documentElement.setAttribute('data-theme', saved || (light ? 'light' : 'dark'));
+    document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
   })();
 
   // Настройки страницы. Все поля необязательны, значения по умолчанию — в reader.js
