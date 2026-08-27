@@ -17,6 +17,9 @@
     fallbacks: ['README.md', 'index.md', 'FEATURES.md'],
     // Надпись над названием документа. Пусто = не показывать
     eyebrow: '',
+    // Баннер над названием. Пусто = взять первую картинку документа,
+    // если это разрешено настройкой coverFromFirstImage
+    cover: '',
     // Приписка к заголовку окна браузера, например ' — badrocktv'
     titleSuffix: '',
     // Отступ сверху при переходе к разделу
@@ -167,6 +170,7 @@
   //   title: Название документа
   //   description: Короткое описание
   //   eyebrow: Надпись над названием
+  //   cover: banner.png
   //   ---
   function readFrontMatter(md) {
     const match = /^﻿?---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(md);
@@ -234,7 +238,13 @@
     el.barTitle.textContent = title;
     setPageMeta(title, meta.description);
 
-    if (CONFIG.coverFromFirstImage) {
+    // Баннер: сначала заданный явно, иначе первая картинка документа
+    const cover = meta.cover || CONFIG.cover;
+    if (cover) {
+      el.coverImg.src = cover;
+      el.coverImg.alt = title;
+      el.cover.hidden = false;
+    } else if (CONFIG.coverFromFirstImage) {
       const img = el.article.querySelector('img');
       const firstH2 = el.article.querySelector('h2');
       const beforeFirstSection = img && (!firstH2 ||
