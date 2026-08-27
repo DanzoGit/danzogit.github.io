@@ -274,7 +274,9 @@ main{ min-width: 0 }
   background: var(--iron-soft);
   cursor: zoom-in;
 }
-.cover img{ display: block; width: 100%; height: auto; max-height: 400px; object-fit: cover }
+/* 480px хватает, чтобы баннер 16:9 влез целиком при полной ширине колонки;
+   картинки других пропорций обрезаются по центру */
+.cover img{ display: block; width: 100%; height: auto; max-height: 480px; object-fit: cover }
 .cover::after{
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(to top, var(--cover-fade) 2%, transparent 52%);
