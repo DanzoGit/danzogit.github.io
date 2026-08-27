@@ -1,7 +1,7 @@
 ---
-title: Все возможности бота 7dbot
-description: Что умеет 7dbot на Twitch-канале badrocktv: команды чата, награды за баллы, именные зомби в 7 Days to Die, анонсы и сайт.
-eyebrow: Twitch-канал badrocktv
+title: "Все возможности бота 7dbot"
+description: "Что умеет 7dbot на Twitch-канале badrocktv: команды чата, награды за баллы, именные зомби в 7 Days to Die, анонсы и сайт."
+eyebrow: "Twitch-канал badrocktv"
 ---
 
 # Все возможности бота 7dbot
