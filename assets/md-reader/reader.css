@@ -27,6 +27,7 @@
   --mark-hot-fg:#1b1b18;
   --cover-fade: rgba(25, 28, 25, .96);
   --panel-blur: rgba(19, 21, 18, .84);
+  --veil:       rgba(9, 10, 9, .82);
   --shadow:     0 18px 44px rgba(0, 0, 0, .42);
 
   --edge: 3px;
@@ -78,6 +79,7 @@
   --mark-hot-fg:#26251f;
   --cover-fade: rgba(230, 225, 212, .96);
   --panel-blur: rgba(230, 225, 212, .86);
+  --veil:       rgba(222, 216, 201, .88);
   --shadow:     0 18px 44px rgba(60, 50, 30, .12);
 
   --c-fg:    #26251f;
@@ -531,6 +533,128 @@ mark.hit.now{ background: var(--mark-hot); color: var(--mark-hot-fg) }
 .fail code{ font-family: var(--font-mono); font-size: .9em; color: var(--brass) }
 
 /* ============================================================
+   Свой файл с компьютера: стартовый экран и перетаскивание
+   ============================================================ */
+/* Поле выбора файла держится в разметке ради вызова .click() из панели */
+.file-input{ position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
+
+.intro{ margin-top: 34px; max-width: 66ch }
+.intro-card{
+  position: relative;
+  padding: 34px 32px 28px;
+  background: var(--iron-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--edge);
+}
+/* Две засечки по диагонали — метка приемной зоны, тот же знак на оверлее */
+.intro-card::before, .intro-card::after{
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border: 2px solid var(--rust);
+}
+.intro-card::before{ top: -1px; left: -1px; border-right: 0; border-bottom: 0 }
+.intro-card::after{ bottom: -1px; right: -1px; border-left: 0; border-top: 0 }
+
+.intro-tag{
+  font-family: var(--font-mono); font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: .18em;
+  color: var(--rust);
+  margin: 0 0 12px;
+}
+.intro-title{
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(24px, 3.4vw, 34px); line-height: 1.06;
+  text-transform: uppercase; letter-spacing: .01em;
+  color: var(--bone);
+  margin: 0;
+}
+.intro-lead{ margin: 14px 0 22px; max-width: 46ch; color: var(--ash); font-size: 15px }
+.intro-warn{
+  margin: 0 0 20px;
+  padding: 9px 12px;
+  background: var(--blood-veil);
+  border-left: 2px solid var(--blood);
+  border-radius: 0 var(--edge) var(--edge) 0;
+  color: var(--ash);
+  font-family: var(--font-mono); font-size: 12px;
+}
+.intro-act{ display: flex; align-items: center; gap: 14px; flex-wrap: wrap }
+.pick{
+  display: inline-flex; align-items: center; gap: 9px;
+  height: 38px; padding: 0 16px;
+  background: var(--rust-veil);
+  border: 1px solid var(--rust);
+  border-radius: var(--edge);
+  color: var(--bone);
+  font-family: var(--font-display); font-size: 14px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .08em;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.pick:hover{ background: var(--rust); color: #fff }
+.pick svg{ width: 16px; height: 16px }
+.intro-drop{
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--ash-dim);
+}
+
+/* Спецификация: что читалка принимает */
+.specs{
+  display: grid; gap: 9px;
+  margin: 26px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.specs > div{ display: flex; gap: 14px; align-items: baseline }
+.specs dt{
+  flex: 0 0 92px;
+  font-family: var(--font-mono); font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: .13em;
+  color: var(--ash-dim);
+}
+.specs dd{ margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--ash) }
+.specs code{ font-family: var(--font-mono); font-size: 12px; color: var(--brass) }
+
+.drop{
+  position: fixed; inset: 0; z-index: 78;
+  display: none; align-items: center; justify-content: center;
+  padding: 26px;
+  background: var(--veil);
+  backdrop-filter: blur(3px);
+  pointer-events: none; /* события перетаскивания слушает документ */
+}
+body.dragging .drop{ display: flex }
+.drop-mark{
+  position: relative;
+  padding: 46px 62px;
+  text-align: center;
+  animation: rise .18s ease both;
+}
+.drop-mark::before, .drop-mark::after{
+  content: '';
+  position: absolute;
+  width: 34px; height: 34px;
+  border: 2px solid var(--rust);
+}
+.drop-mark::before{ top: 0; left: 0; border-right: 0; border-bottom: 0 }
+.drop-mark::after{ bottom: 0; right: 0; border-left: 0; border-top: 0 }
+.drop-mark svg{ width: 32px; height: 32px; display: block; margin: 0 auto 14px; color: var(--rust) }
+.drop-text{
+  margin: 0;
+  font-family: var(--font-display); font-size: 21px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--bone);
+}
+.drop-sub{
+  margin: 8px 0 0;
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--ash-dim);
+}
+
+/* ============================================================
    Наверх, просмотр картинки, уведомление
    ============================================================ */
 .up{
@@ -613,12 +737,18 @@ mark.hit.now{ background: var(--mark-hot); color: var(--mark-hot-fg) }
   article h3{ font-size: 18px }
   .anchor{ display: none }
   .find input{ width: 104px }
+  .intro{ max-width: none }
+  .intro-card{ padding: 26px 20px 24px }
 }
 @media (max-width: 560px){
   .bar{ padding: 0 12px; gap: 10px }
   .bar-title, .bar-sep, .read-pct{ display: none }
   .find input{ width: 92px }
   .doc-facts i{ margin: 0 5px }
+  .specs > div{ display: block }
+  .specs dd{ margin-top: 3px }
+  .pick{ width: 100%; justify-content: center }
+  .drop-mark{ padding: 34px 40px }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -628,7 +758,7 @@ mark.hit.now{ background: var(--mark-hot); color: var(--mark-hot-fg) }
 
 @media print{
   body{ background: #fff; color: #000 }
-  .bar, .rail, .up, .copy, .scrim, .toast, .zoom{ display: none !important }
+  .bar, .rail, .up, .copy, .scrim, .toast, .zoom, .drop{ display: none !important }
   .shell{ display: block; max-width: none; padding: 0 }
   article{ max-width: none }
   article pre, .tbl{ break-inside: avoid }
