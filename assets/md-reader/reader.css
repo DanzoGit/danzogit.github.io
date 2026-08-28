@@ -617,6 +617,31 @@ mark.hit.now{ background: var(--mark-hot); color: var(--mark-hot-fg) }
 .specs dd{ margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--ash) }
 .specs code{ font-family: var(--font-mono); font-size: 12px; color: var(--brass) }
 
+/* Ненайденная картинка документа с диска: пустое гнездо той же приемной
+   рамкой, что и зона перетаскивания, но приглушенное — это не ошибка */
+.img-gap{
+  display: flex; align-items: flex-start; gap: 14px;
+  margin: 24px 0;
+  padding: 14px 16px;
+  background: var(--iron-soft);
+  border: 1px dashed var(--line);
+  border-radius: var(--edge);
+}
+/* Иконка стоит напротив имени файла, а не по центру блока */
+.img-gap svg{ width: 20px; height: 20px; flex: 0 0 auto; margin-top: 1px; color: var(--ash-dim) }
+.img-gap-body{ display: flex; flex-direction: column; gap: 3px; min-width: 0 }
+.img-gap-name{
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--brass);
+  overflow-wrap: anywhere;
+}
+.img-gap-alt{ font-size: 13.5px; color: var(--ash) }
+.img-gap-note{
+  font-family: var(--font-mono); font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--ash-dim);
+}
+
 .drop{
   position: fixed; inset: 0; z-index: 78;
   display: none; align-items: center; justify-content: center;
@@ -627,19 +652,14 @@ mark.hit.now{ background: var(--mark-hot); color: var(--mark-hot-fg) }
 }
 body.dragging .drop{ display: flex }
 .drop-mark{
-  position: relative;
-  padding: 46px 62px;
+  padding: 38px 54px;
   text-align: center;
+  background: var(--soil-deep);
+  border: 2px dashed var(--rust);
+  border-radius: var(--edge);
+  box-shadow: var(--shadow);
   animation: rise .18s ease both;
 }
-.drop-mark::before, .drop-mark::after{
-  content: '';
-  position: absolute;
-  width: 34px; height: 34px;
-  border: 2px solid var(--rust);
-}
-.drop-mark::before{ top: 0; left: 0; border-right: 0; border-bottom: 0 }
-.drop-mark::after{ bottom: 0; right: 0; border-left: 0; border-top: 0 }
 .drop-mark svg{ width: 32px; height: 32px; display: block; margin: 0 auto 14px; color: var(--rust) }
 .drop-text{
   margin: 0;
@@ -748,7 +768,9 @@ body.dragging .drop{ display: flex }
   .specs > div{ display: block }
   .specs dd{ margin-top: 3px }
   .pick{ width: 100%; justify-content: center }
-  .drop-mark{ padding: 34px 40px }
+  /* На телефоне файл в окно не перетащить, подсказка только мешает */
+  .intro-drop{ display: none }
+  .drop-mark{ padding: 30px 34px }
 }
 
 @media (prefers-reduced-motion: reduce){

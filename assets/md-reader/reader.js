@@ -226,6 +226,7 @@
     resetView();
     el.article.innerHTML = marked.parse(body);
     applyLocalImages();
+    markMissingImages();
 
     buildHead(body, meta, lastModified);
     dressCode();
@@ -278,13 +279,15 @@
     el.barTitle.textContent = title;
     setPageMeta(title, meta.description);
 
-    // Баннер: сначала заданный явно, иначе первая картинка документа
+    // Баннер: сначала заданный явно, иначе первая картинка документа.
+    // У документа с диска берется только та картинка, которую принесли с ним
     const cover = meta.cover || CONFIG.cover;
-    if (cover) {
-      el.coverImg.src = localSrc(cover) || cover;
+    const coverSrc = cover ? (localSrc(cover) || (localDoc ? '' : cover)) : '';
+    if (coverSrc) {
+      el.coverImg.src = coverSrc;
       el.coverImg.alt = title;
       el.cover.hidden = false;
-    } else if (CONFIG.coverFromFirstImage) {
+    } else if (!cover && CONFIG.coverFromFirstImage) {
       const img = el.article.querySelector('img');
       const firstH2 = el.article.querySelector('h2');
       const beforeFirstSection = img && (!firstH2 ||
@@ -393,6 +396,8 @@
   // Картинки, перетащенные вместе с документом, подставляются по имени файла:
   // относительные пути локального документа браузеру недоступны
   let localImages = new Map();
+  // Документ открыт с диска, а не взят рядом со страницей
+  let localDoc = false;
 
   function localSrc(src) {
     if (!localImages.size || !src || /^(https?:|data:|blob:)/i.test(src)) return '';
@@ -405,6 +410,30 @@
     el.article.querySelectorAll('img[src]').forEach((img) => {
       const url = localSrc(img.getAttribute('src'));
       if (url) img.src = url;
+    });
+  }
+
+  // У документа с диска путь к картинке ведет в никуда: вместо битой ссылки
+  // показываем имя нужного файла, чтобы его можно было принести следом
+  function markMissingImages() {
+    if (!localDoc) return;
+    el.article.querySelectorAll('img[src]').forEach((img) => {
+      const src = img.getAttribute('src') || '';
+      if (/^(https?:|data:|blob:)/i.test(src)) return;
+
+      const name = decodeURIComponent(src.split(/[?#]/)[0].split('/').pop() || src);
+      const alt = (img.getAttribute('alt') || '').trim();
+
+      const box = document.createElement('div');
+      box.className = 'img-gap';
+      box.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M4 5.5h16v13H4z"/><path d="M4 15l4.5-4.5L14 16"/><circle cx="15.5" cy="9.5" r="1.4"/>' +
+        '</svg><div class="img-gap-body"><span class="img-gap-name">' + escapeHtml(name) + '</span>' +
+        (alt ? '<span class="img-gap-alt">' + escapeHtml(alt) + '</span>' : '') +
+        '<span class="img-gap-note">Картинка не открыта вместе с документом</span></div>';
+      img.replaceWith(box);
     });
   }
 
@@ -730,6 +759,7 @@
     // Ссылка на раздел прошлого документа к новому не относится
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
 
+    localDoc = true;
     mdFile = file.name;
     render(text, file.lastModified || '');
     toast('Открыт ' + file.name);
