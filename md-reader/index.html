@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Страница без своего документа: читает файл, выбранный на компьютере.
+     Заголовок окна меняется на название открытого документа, значения ниже
+     видны до выбора файла и в превью ссылки. -->
+<title>Читалка Markdown</title>
+<meta name="description" content="Откройте файл Markdown с компьютера: оглавление, поиск по тексту, подсветка кода, светлая и темная темы." />
+
+<!-- Превью для Telegram, Discord и поиска собирают роботы, которые не выполняют
+     скрипты, поэтому эти строки заполняются вручную под конкретную страницу. -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Читалка Markdown" />
+<meta property="og:description" content="Откройте файл Markdown с компьютера: оглавление, поиск по тексту, подсветка кода, светлая и темная темы." />
+<meta property="og:url" content="https://danzogit.github.io/md-reader/" />
+<!-- Картинки для превью у страницы нет. Чтобы она появилась, положите баннер
+     рядом с этим файлом и раскомментируйте строку:
+<meta property="og:image" content="https://danzogit.github.io/md-reader/banner.jpg" /> -->
+
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#191c19" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- Подсветка кода: две темы, переключаются вместе с темой страницы -->
+<link id="hljs-dark" rel="stylesheet" media="all"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark-dimmed.min.css">
+<link id="hljs-light" rel="stylesheet" media="not all"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/csharp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/xml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/bash.min.js"></script>
+
+<script>
+  // Тема выбирается до отрисовки, иначе на светлой теме мигает темный фон.
+  // По умолчанию тема темная: светлая включается только вручную кнопкой
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('md-theme'); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
+  })();
+
+  // Настройки страницы. Все поля необязательны, значения по умолчанию — в reader.js
+  window.MD_READER = {
+    md: '',                 // пусто = искать самому: ?md=, имя страницы, имя папки
+    fallbacks: [],          // своего документа у страницы нет, искать нечего
+    localFile: true,        // кнопка в панели, перетаскивание в окно, стартовый экран
+    eyebrow: '',            // надпись над названием; можно задать в front matter документа
+    titleSuffix: ' — читалка',
+  };
+</script>
+
+<link rel="stylesheet" href="/assets/md-reader/reader.css" />
+</head>
+<body>
+  <header class="bar">
+    <button id="navToggle" class="btn" type="button" aria-label="Показать разделы" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+
+    <div class="moon" id="moon" role="img" aria-label="Прочитано 0 процентов"></div>
+    <span class="read-pct" id="readPct">0%</span>
+    <span class="bar-sep"></span>
+    <span class="bar-title" id="barTitle"></span>
+
+    <div class="bar-actions">
+      <div class="find">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>
+        </svg>
+        <input id="find" type="search" placeholder="Найти в документе" autocomplete="off"
+               spellcheck="false" aria-label="Найти в документе" />
+        <span class="find-count" id="findCount"><kbd>/</kbd></span>
+      </div>
+      <button id="openBtn" class="btn" type="button" hidden
+              aria-label="Открыть файл с компьютера" title="Открыть файл с компьютера">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+          <path d="M14 3v5h5"/>
+          <path d="M12 18.5V12M9.6 14.4 12 12l2.4 2.4"/>
+        </svg>
+      </button>
+      <button id="themeBtn" class="btn" type="button" aria-label="Сменить тему">
+        <svg id="iMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>
+        </svg>
+        <svg id="iSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:none">
+          <circle cx="12" cy="12" r="4.2"/>
+          <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav class="rail" id="rail" aria-label="Разделы документа">
+      <div class="rail-head">Разделы <b id="railCount">—</b></div>
+      <div class="rail-scroll">
+        <ul id="railList"><li><span class="rail-empty">Читаем файл…</span></li></ul>
+      </div>
+    </nav>
+
+    <main>
+      <div class="cover" id="cover" hidden><img id="coverImg" alt="" /></div>
+
+      <header class="doc-head" id="docHead" hidden>
+        <div class="eyebrow" id="eyebrow" hidden></div>
+        <h1 class="doc-title" id="docTitle"></h1>
+        <p class="doc-facts" id="docFacts"></p>
+      </header>
+
+      <div id="boot">
+        <div class="sk big"></div>
+        <div class="sk w90"></div>
+        <div class="sk w72"></div>
+        <div class="sk box"></div>
+        <div class="sk w54"></div>
+      </div>
+
+      <!-- Виден, пока файл не выбран -->
+      <section class="intro" id="intro" hidden aria-labelledby="introTitle">
+        <div class="intro-card">
+          <p class="intro-tag">Локальный файл</p>
+          <h2 class="intro-title" id="introTitle">Откройте свой Markdown</h2>
+          <p class="intro-lead">Перетащите файл в это окно или выберите его на диске.
+             Документ читается прямо в браузере и никуда не отправляется.</p>
+          <p class="intro-warn" id="introWarn" hidden></p>
+
+          <div class="intro-act">
+            <button class="pick" id="introPick" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+                <path d="M14 3v5h5"/>
+                <path d="M12 18.5V12M9.6 14.4 12 12l2.4 2.4"/>
+              </svg>
+              Открыть файл
+            </button>
+            <span class="intro-drop">или перетащите в окно</span>
+          </div>
+
+          <dl class="specs">
+            <div><dt>Форматы</dt><dd>.md · .markdown · .txt</dd></div>
+            <div><dt>Картинки</dt><dd>перетащите вместе с документом</dd></div>
+            <div><dt>Файл рядом</dt><dd><code>?md=имя-файла.md</code></dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <article id="article" hidden></article>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <button class="up" id="up" type="button" aria-label="Наверх">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </button>
+
+  <div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Просмотр изображения">
+    <img id="zoomImg" alt="" />
+  </div>
+
+  <input class="file-input" id="fileInput" type="file" multiple tabindex="-1"
+         accept=".md,.markdown,.mdown,.txt,text/markdown,text/plain,image/*"
+         aria-hidden="true" />
+
+  <!-- Виден, пока файл тащат над окном -->
+  <div class="drop" id="drop" aria-hidden="true">
+    <div class="drop-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 16V3M7.5 7.5 12 3l4.5 4.5"/>
+        <path d="M4 14v4.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V14"/>
+      </svg>
+      <p class="drop-text">Отпустите файл</p>
+      <p class="drop-sub">.md · .markdown · .txt</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/assets/md-reader/reader.js" defer></script>
+</body>
+</html>

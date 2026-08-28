@@ -28,6 +28,10 @@
     wordsPerMinute: 180,
     // Первую картинку документа выносить в шапку как обложку
     coverFromFirstImage: true,
+    // Разрешить открывать файл с компьютера: кнопка в панели, перетаскивание
+    // в окно и стартовый экран, если рядом со страницей документа нет.
+    // Работает только на страницах, где есть разметка #fileInput и #intro
+    localFile: false,
   };
 
   const CONFIG = Object.assign({}, DEFAULTS, window.MD_READER || {});
@@ -43,6 +47,8 @@
     up: $('up'), navToggle: $('navToggle'), scrim: $('scrim'),
     themeBtn: $('themeBtn'), iMoon: $('iMoon'), iSun: $('iSun'),
     zoom: $('zoom'), zoomImg: $('zoomImg'), toast: $('toast'),
+    fileInput: $('fileInput'), openBtn: $('openBtn'),
+    intro: $('intro'), introPick: $('introPick'), introWarn: $('introWarn'),
   };
 
   // ============================================================
@@ -148,7 +154,22 @@
         // Сеть или запрет браузера — пробуем следующее имя
       }
     }
-    fail(tried);
+    // Страница-читалка без своего документа: предлагаем открыть файл с диска
+    if (CONFIG.localFile && el.intro) showIntro(new URLSearchParams(location.search).get('md'));
+    else fail(tried);
+  }
+
+  // Стартовый экран вместо документа
+  function showIntro(asked) {
+    el.boot.hidden = true;
+    el.intro.hidden = false;
+    el.intro.classList.add('reveal');
+    if (asked && SAFE_NAME.test(asked) && el.introWarn) {
+      el.introWarn.textContent = 'Файла ' + asked + ' нет рядом со страницей. Откройте документ с компьютера.';
+      el.introWarn.hidden = false;
+    }
+    el.railList.innerHTML = '<li><span class="rail-empty">Файл не выбран</span></li>';
+    el.railCount.textContent = '—';
   }
 
   function fail(tried) {
@@ -202,7 +223,9 @@
 
   function render(raw, lastModified) {
     const { meta, body } = readFrontMatter(raw);
+    resetView();
     el.article.innerHTML = marked.parse(body);
+    applyLocalImages();
 
     buildHead(body, meta, lastModified);
     dressCode();
@@ -212,7 +235,8 @@
     dressImages();
     buildRail();
 
-    el.boot.remove();
+    el.boot.hidden = true;
+    if (el.intro) el.intro.hidden = true;
     el.article.hidden = false;
     el.docHead.hidden = false;
     el.docHead.classList.add('reveal');
@@ -223,6 +247,22 @@
     initFind();
     updateRead();
     jumpToHash();
+  }
+
+  // Документ может смениться на другой: убираем следы прошлого
+  function resetView() {
+    el.find.value = '';
+    resetFind(true);
+    closeNav();
+    activeId = null;
+    holdUntil = 0;
+    el.cover.hidden = true;
+    el.coverImg.removeAttribute('src');
+    el.docHead.classList.remove('reveal');
+    el.article.classList.remove('reveal');
+    el.article.style.animationDelay = '';
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    void el.article.offsetWidth; // без пересчета верстки анимация не повторится
   }
 
   // Шапка: надпись, название, строка данных, обложка
@@ -241,7 +281,7 @@
     // Баннер: сначала заданный явно, иначе первая картинка документа
     const cover = meta.cover || CONFIG.cover;
     if (cover) {
-      el.coverImg.src = cover;
+      el.coverImg.src = localSrc(cover) || cover;
       el.coverImg.alt = title;
       el.cover.hidden = false;
     } else if (CONFIG.coverFromFirstImage) {
@@ -350,6 +390,24 @@
     });
   }
 
+  // Картинки, перетащенные вместе с документом, подставляются по имени файла:
+  // относительные пути локального документа браузеру недоступны
+  let localImages = new Map();
+
+  function localSrc(src) {
+    if (!localImages.size || !src || /^(https?:|data:|blob:)/i.test(src)) return '';
+    const name = decodeURIComponent(src.split(/[?#]/)[0].split('/').pop() || '');
+    return localImages.get(name.toLowerCase()) || '';
+  }
+
+  function applyLocalImages() {
+    if (!localImages.size) return;
+    el.article.querySelectorAll('img[src]').forEach((img) => {
+      const url = localSrc(img.getAttribute('src'));
+      if (url) img.src = url;
+    });
+  }
+
   // ============================================================
   //  Оглавление
   // ============================================================
@@ -445,6 +503,14 @@
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
+  let queued = false;
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { updateActive(); updateRead(); queued = false; });
+  }
+
+  let scrollBound = false;
   function initRail() {
     links.forEach((a) => {
       a.addEventListener('click', (e) => {
@@ -459,14 +525,12 @@
       });
     });
 
-    let queued = false;
-    function onScroll() {
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(() => { updateActive(); updateRead(); queued = false; });
+    // Ссылки создаются заново для каждого документа, слушатели окна — один раз
+    if (!scrollBound) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      scrollBound = true;
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
     updateActive();
   }
 
@@ -559,7 +623,10 @@
     el.findCount.textContent = (hitIndex + 1) + '/' + hits.length;
   }
 
+  let findBound = false;
   function initFind() {
+    if (findBound) return;
+    findBound = true;
     el.find.addEventListener('input', () => {
       clearTimeout(findTimer);
       findTimer = setTimeout(() => runFind(el.find.value), 180);
@@ -623,5 +690,93 @@
     }
   });
 
+  // ============================================================
+  //  Свой файл с компьютера
+  // ============================================================
+  const MD_EXT = /\.(md|markdown|mdown|txt)$/i;
+  let blobUrls = [];
+
+  function openPicker() {
+    if (el.fileInput) el.fileInput.click();
+  }
+
+  // Из набора берется первый документ, остальные картинки идут к нему в комплект
+  async function openLocal(fileList) {
+    const files = [...fileList];
+    const file = files.find((f) => MD_EXT.test(f.name));
+    if (!file) {
+      toast('Нужен файл .md, .markdown или .txt');
+      return;
+    }
+
+    let text;
+    try {
+      text = await file.text();
+    } catch (e) {
+      toast('Файл не прочитался');
+      return;
+    }
+
+    blobUrls.forEach(URL.revokeObjectURL);
+    blobUrls = [];
+    localImages = new Map();
+    files.forEach((f) => {
+      if (f === file || !/^image\//i.test(f.type)) return;
+      const url = URL.createObjectURL(f);
+      blobUrls.push(url);
+      localImages.set(f.name.toLowerCase(), url);
+    });
+
+    // Ссылка на раздел прошлого документа к новому не относится
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+
+    mdFile = file.name;
+    render(text, file.lastModified || '');
+    toast('Открыт ' + file.name);
+  }
+
+  function initLocalFile() {
+    if (!CONFIG.localFile || !el.fileInput) return;
+
+    if (el.openBtn) {
+      el.openBtn.hidden = false;
+      el.openBtn.addEventListener('click', openPicker);
+    }
+    if (el.introPick) el.introPick.addEventListener('click', openPicker);
+
+    el.fileInput.addEventListener('change', () => {
+      if (el.fileInput.files.length) openLocal(el.fileInput.files);
+      el.fileInput.value = ''; // иначе повторный выбор того же файла не сработает
+    });
+
+    // Курсор с файлом проходит через вложенные элементы, поэтому вход и выход
+    // считаются, а не переключаются: иначе подсветка зоны мигает
+    let depth = 0;
+    const withFiles = (e) => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+    const stopDrag = () => {
+      depth = 0;
+      document.body.classList.remove('dragging');
+    };
+
+    document.addEventListener('dragenter', (e) => {
+      if (!withFiles(e)) return;
+      depth++;
+      document.body.classList.add('dragging');
+    });
+    document.addEventListener('dragover', (e) => {
+      if (withFiles(e)) e.preventDefault();
+    });
+    document.addEventListener('dragleave', (e) => {
+      if (withFiles(e) && --depth <= 0) stopDrag();
+    });
+    document.addEventListener('drop', (e) => {
+      if (!withFiles(e)) return;
+      e.preventDefault();
+      stopDrag();
+      openLocal(e.dataTransfer.files);
+    });
+  }
+
+  initLocalFile();
   load();
 })();
