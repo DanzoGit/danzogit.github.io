@@ -213,6 +213,11 @@ kbd{
   padding: 34px 26px 110px;
 }
 
+/* Без разделов остается одна центрированная колонка той же читаемой ширины. */
+.shell.no-rail{ grid-template-columns: minmax(0, 1fr); gap: 0 }
+.shell.no-rail > main{ width: 100%; max-width: 74ch; justify-self: center }
+.shell.no-rail .intro{ margin-left: auto; margin-right: auto }
+
 /* ---------- Оглавление: рельс с засечками ---------- */
 .rail{
   position: sticky; top: calc(var(--bar-h) + 26px); align-self: start;
@@ -314,6 +319,7 @@ main{ min-width: 0 }
   margin: 18px 0 0;
   padding-top: 14px;
   border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
 }
 .doc-facts i{ font-style: normal; color: var(--line); margin: 0 8px }
 

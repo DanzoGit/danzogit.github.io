@@ -20,7 +20,7 @@
     // Баннер над названием. Пусто = взять первую картинку документа,
     // если это разрешено настройкой coverFromFirstImage
     cover: '',
-    // Приписка к заголовку окна браузера, например ' — badrocktv'
+    // Приписка к заголовку окна браузера, например ' — читалка'
     titleSuffix: '',
     // Отступ сверху при переходе к разделу
     scrollOffset: 96,
@@ -41,6 +41,7 @@
     article: $('article'), boot: $('boot'),
     cover: $('cover'), coverImg: $('coverImg'),
     docHead: $('docHead'), docTitle: $('docTitle'), docFacts: $('docFacts'), eyebrow: $('eyebrow'),
+    rail: $('rail'), shell: document.querySelector('.shell'),
     railList: $('railList'), railCount: $('railCount'), barTitle: $('barTitle'),
     moon: $('moon'), readPct: $('readPct'),
     find: $('find'), findCount: $('findCount'),
@@ -102,6 +103,36 @@
     ));
   }
 
+  function parseDocumentDate(value) {
+    if (value === undefined || value === null || value === '') return null;
+    const raw = typeof value === 'string' ? value.trim() : value;
+    const calendar = typeof raw === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw);
+    const date = new Date(calendar ? raw + 'T00:00:00.000Z' : raw);
+    if (!Number.isFinite(date.getTime()) || (calendar && date.toISOString().slice(0, 10) !== raw)) return null;
+    return { date, calendar, datetime: calendar ? raw : date.toISOString() };
+  }
+
+  function formatDocumentDate(value) {
+    const parsed = parseDocumentDate(value);
+    if (!parsed) return '';
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    // У даты без времени нет часового пояса: ее календарный день не сдвигается.
+    if (parsed.calendar) return parsed.date.toLocaleDateString('ru-RU', { ...options, timeZone: 'UTC' });
+    return parsed.date.toLocaleString('ru-RU', { ...options, hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+  }
+
+  function dateMarkup(value) {
+    const parsed = parseDocumentDate(value);
+    return parsed ? '<time datetime="' + escapeHtml(parsed.datetime) + '">' + escapeHtml(formatDocumentDate(value)) + '</time>' : '';
+  }
+
+  function localizeTimes() {
+    document.querySelectorAll('time[datetime]').forEach((time) => {
+      const text = formatDocumentDate(time.getAttribute('datetime'));
+      if (text) time.textContent = text;
+    });
+  }
+
   const SAFE_NAME = /^[\w.\-]+\.md$/i;
 
   // Какие файлы пробовать и в каком порядке
@@ -161,6 +192,7 @@
 
   // Стартовый экран вместо документа
   function showIntro(asked) {
+    setRailVisible(false);
     el.boot.hidden = true;
     el.intro.hidden = false;
     el.intro.classList.add('reveal');
@@ -173,6 +205,7 @@
   }
 
   function fail(tried) {
+    setRailVisible(false);
     el.boot.innerHTML =
       '<div class="fail"><h2>Документ не найден</h2>' +
       '<p>Ни один файл не открылся. Пробовали: ' +
@@ -229,6 +262,7 @@
     markMissingImages();
 
     buildHead(body, meta, lastModified);
+    localizeTimes();
     dressCode();
     dressTables();
     dressLinks();
@@ -307,18 +341,23 @@
     const sections = el.article.querySelectorAll('h2').length;
 
     const facts = [];
-    if (sections) facts.push(sections + ' ' + plural(sections, ['раздел', 'раздела', 'разделов']));
-    facts.push('~' + minutes + ' ' + plural(minutes, ['минута', 'минуты', 'минут']) + ' чтения');
-    if (lastModified) {
-      const date = new Date(lastModified);
-      if (!isNaN(date)) {
-        facts.push('обновлено ' + date.toLocaleDateString('ru-RU', {
-          day: 'numeric', month: 'long', year: 'numeric',
-        }));
-      }
+    if (sections) facts.push(escapeHtml(sections + ' ' + plural(sections, ['раздел', 'раздела', 'разделов'])));
+    facts.push(escapeHtml('~' + minutes + ' ' + plural(minutes, ['минута', 'минуты', 'минут']) + ' чтения'));
+    const published = meta.published_at || meta.date;
+    const updated = meta.updated_at;
+    const publishedMarkup = dateMarkup(published), updatedMarkup = dateMarkup(updated);
+    if (publishedMarkup) facts.push((meta.published_at ? 'опубликовано ' : 'дата документа ') + publishedMarkup);
+    if (updatedMarkup && parseDocumentDate(updated).date.getTime() !== parseDocumentDate(published)?.date.getTime()) {
+      facts.push('обновлено ' + updatedMarkup);
     }
-    facts.push(mdFile);
-    el.docFacts.innerHTML = facts.map(escapeHtml).join('<i>/</i>');
+    const steamSource = /^https:\/\/store\.steampowered\.com\/news\/app\/\d+\/view\/\d+/i.test(meta.source_url || '');
+    // Last-Modified сайта относится к деплою, а не к публикации новости Steam.
+    if (!published && !updated && !steamSource) {
+      const modifiedMarkup = dateMarkup(lastModified);
+      if (modifiedMarkup) facts.push('обновлено ' + modifiedMarkup);
+    }
+    facts.push(escapeHtml(mdFile));
+    el.docFacts.innerHTML = facts.join('<i>/</i>');
   }
 
   // Блоки кода: язык, подсветка, копирование
@@ -440,6 +479,13 @@
   // ============================================================
   //  Оглавление
   // ============================================================
+  function setRailVisible(visible) {
+    if (el.rail) el.rail.hidden = !visible;
+    el.navToggle.hidden = !visible;
+    if (el.shell) el.shell.classList.toggle('no-rail', !visible);
+    if (!visible) closeNav();
+  }
+
   function buildRail() {
     el.railList.innerHTML = '';
     heads = [...el.article.querySelectorAll('h2, h3')];
@@ -477,7 +523,7 @@
       el.railList.appendChild(li);
     });
 
-    if (!heads.length) el.railList.innerHTML = '<li><span class="rail-empty">Разделов нет</span></li>';
+    setRailVisible(heads.length > 0);
 
     links = [...el.railList.querySelectorAll('a')];
     linkById = new Map(links.map((a) => [a.dataset.target, a]));
@@ -677,6 +723,7 @@
   //  Разделы на телефоне, просмотр картинок, клавиатура
   // ============================================================
   function openNav() {
+    if (!heads.length || el.navToggle.hidden) return;
     document.body.classList.add('nav-open');
     el.navToggle.setAttribute('aria-expanded', 'true');
   }
@@ -808,5 +855,7 @@
   }
 
   initLocalFile();
+  setRailVisible(false);
+  localizeTimes();
   load();
 })();

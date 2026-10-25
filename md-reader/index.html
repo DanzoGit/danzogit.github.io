@@ -63,7 +63,7 @@
 </head>
 <body>
   <header class="bar">
-    <button id="navToggle" class="btn" type="button" aria-label="Показать разделы" aria-expanded="false">
+    <button id="navToggle" class="btn" type="button" hidden aria-label="Показать разделы" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
         <path d="M4 7h16M4 12h16M4 17h16"/>
       </svg>
@@ -103,8 +103,8 @@
     </div>
   </header>
 
-  <div class="shell">
-    <nav class="rail" id="rail" aria-label="Разделы документа">
+  <div class="shell no-rail">
+    <nav class="rail" id="rail" hidden aria-label="Разделы документа">
       <div class="rail-head">Разделы <b id="railCount">—</b></div>
       <div class="rail-scroll">
         <ul id="railList"><li><span class="rail-empty">Читаем файл…</span></li></ul>
